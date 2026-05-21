@@ -77,4 +77,14 @@ public class HomeController {
             e.printStackTrace();
         }
 }
+    @FXML
+    private void handleReviews() {
+        openPage("/review_display.fxml", "MusicTick - Reviews", 800, 550);
+    }
+
+    @FXML
+    private void handleVIPUpgrade() {
+        openPage("/vip_upgrade.fxml", "MusicTick - VIP Upgrade", 800, 550);
+    }
+
 }
