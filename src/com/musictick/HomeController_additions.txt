@@ -1,16 +1,1 @@
-Πρόσθεσε αυτά στο HomeController.java πριν το τελευταίο }:
 
-@FXML
-private void handleReviews() {
-    openPage("/review_display.fxml", "MusicTick - Reviews", 800, 550);
-}
-
-@FXML
-private void handleVIPUpgrade() {
-    openPage("/vip_upgrade.fxml", "MusicTick - VIP Upgrade", 800, 550);
-}
-
-Και στο user_home.fxml πρόσθεσε buttons:
-
-<Button text="Reviews" onAction="#handleReviews" />
-<Button text="VIP Upgrade" onAction="#handleVIPUpgrade" />
