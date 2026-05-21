@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musictick.VIPUpgradeController">
+    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+    <Label text="VIP Upgrade" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <ComboBox fx:id="ticketComboBox" promptText="Επίλεξε εισιτήριο" prefWidth="480"/>
+    <ComboBox fx:id="vipSeatComboBox" promptText="Επίλεξε VIP θέση" prefWidth="480"/>
+    <Label fx:id="amountLabel" text="Extra ποσό: -"/>
+    <TextField fx:id="paymentDataField" promptText="Στοιχεία πληρωμής / transaction reference" prefWidth="480"/>
+    <Button text="Αναβάθμιση σε VIP" onAction="#submitUpgrade"/>
+    <Label fx:id="messageLabel" textFill="red"/>
+    <Button text="Πίσω" onAction="#goBack"/>
+</VBox>
