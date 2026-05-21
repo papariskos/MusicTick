@@ -23,6 +23,10 @@
             <Button maxWidth="Infinity" onAction="#handleTickets" style="-fx-background-color: #34495e; -fx-text-fill: white;" text="My Tickets" />
             <Button maxWidth="Infinity" onAction="#handleForum" style="-fx-background-color: #34495e; -fx-text-fill: white;" text="Forum" />
             <Button maxWidth="Infinity" onAction="#handleReport" style="-fx-background-color: #34495e; -fx-text-fill: white;" text="Report Problem" />
+            <Button maxWidth="Infinity" onAction="#handleTransferTicket" style="-fx-background-color: #34495e; -fx-text-fill: white;" text="Transfer Ticket" />
+            <Button maxWidth="Infinity" onAction="#handleNotifications" style="-fx-background-color: #34495e; -fx-text-fill: white;" text="Notifications" />
+
+            
 
             <Region VBox.vgrow="ALWAYS" />
             <Button maxWidth="Infinity" onAction="#handleLogout" style="-fx-background-color: #c0392b; -fx-text-fill: white;" text="Logout" />
