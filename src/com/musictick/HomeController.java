@@ -47,4 +47,34 @@ public class HomeController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void handleTransferTicket() {
+        openPage("/transfer_ticket.fxml", "MusicTick - Transfer Ticket", 800, 550);
+    }
+
+    @FXML
+    private void handleNotifications() {
+        openPage("/notifications.fxml", "MusicTick - Notifications", 800, 550);
+    }
+
+    private void openPage(String fxml, String title, int width, int height) {
+        try {
+            var resource = getClass().getResource(fxml);
+            if (resource == null) {
+                System.err.println("Error: Could not find " + fxml);
+                return;
+            }
+
+            Parent root = FXMLLoader.load(resource);
+            Stage stage = Main.getPrimaryStage();
+
+            if (stage != null) {
+                stage.setScene(new Scene(root, width, height));
+                stage.setTitle(title);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+}
 }
