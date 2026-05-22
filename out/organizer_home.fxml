@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+
+<VBox alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musictick.HomeController">
+    <Label text="Organizer Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Button text="Create Event"/>
+    <Button text="View Sales Statistics"/>
+    <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: red; -fx-text-fill: white;"/>
+</VBox>
