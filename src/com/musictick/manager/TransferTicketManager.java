@@ -2,7 +2,7 @@ package com.musictick.manager;
 
 import com.musictick.dao.TicketDAO;
 import com.musictick.dao.UserDAO;
-import com.musictick.model.User;
+import models.User;
 
 public class TransferTicketManager {
     private final TicketDAO ticketDAO = new TicketDAO();

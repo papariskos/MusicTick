@@ -3,7 +3,7 @@ package com.musictick.controller;
 import com.musictick.Main;
 import com.musictick.Session;
 import com.musictick.manager.NotificationManager;
-import com.musictick.model.Alert;
+import models.Notification;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class NotificationsController {
-    @FXML private ListView<Alert> alertsListView;
+    @FXML private ListView<Notification> alertsListView;
     @FXML private Label statusLabel;
 
     private final NotificationManager notificationManager = new NotificationManager();
@@ -29,7 +29,7 @@ public class NotificationsController {
     @FXML
     private void checkNewAlerts() {
         try {
-            List<Alert> alerts = notificationManager.checkNewAlerts(Session.getCurrentUserId());
+            List<Notification> alerts = notificationManager.checkNewAlerts(Session.getCurrentUserId());
             alertsListView.setItems(FXCollections.observableArrayList(alerts));
             statusLabel.setText(alerts.isEmpty() ? "Δεν υπάρχουν ειδοποιήσεις." : "Βρέθηκαν " + alerts.size() + " ειδοποιήσεις.");
         } catch (Exception e) {

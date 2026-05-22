@@ -1,5 +1,7 @@
 package com.musictick;
 
+import com.musictick.AuthUtils;
+import com.musictick.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,11 +39,13 @@ public class LoginController {
 
         try {
             if (email.equals("admin") && password.equals("admin")) {
+                Session.setCurrentUserId(0);
+                Session.setCurrentUserRole("ADMIN");
                 openHomePage();
                 return;
             }
 
-            String sql = "SELECT user_id, password_hash FROM users WHERE email = ?";
+            String sql = "SELECT user_id, password_hash, role FROM users WHERE email = ?";
 
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -57,6 +61,8 @@ public class LoginController {
                 String providedHash = AuthUtils.hashPassword(password);
 
                 if (storedHash != null && storedHash.equals(providedHash)) {
+                    Session.setCurrentUserId(rs.getInt("user_id"));
+                    Session.setCurrentUserRole(rs.getString("role"));
                     openHomePage();
                 } else {
                     errorLabel.setText("Λάθος email ή κωδικός.");
@@ -72,7 +78,12 @@ public class LoginController {
     }
 
     private void openHomePage() throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/user_home.fxml"));
+        String fxml = "/user_home.fxml";
+        if ("ORGANIZER".equals(Session.getCurrentUserRole())) {
+            fxml = "/organizer_home.fxml";
+        }
+
+        Parent root = FXMLLoader.load(getClass().getResource(fxml));
         Stage stage = (Stage) emailField.getScene().getWindow();
         stage.setScene(new Scene(root, 800, 600));
     }

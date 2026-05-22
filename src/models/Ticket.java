@@ -42,4 +42,9 @@ public class Ticket {
     public void setQrCode(String qrCode) { this.qrCode = qrCode; }
     public LocalDateTime getPurchaseDate() { return purchaseDate; }
     public void setPurchaseDate(LocalDateTime purchaseDate) { this.purchaseDate = purchaseDate; }
+
+    @Override
+    public String toString() {
+        return ticketId + " - concert " + concertId + " (" + status + ")";
+    }
 }

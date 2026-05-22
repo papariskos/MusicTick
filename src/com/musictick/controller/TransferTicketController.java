@@ -4,7 +4,7 @@ import com.musictick.Main;
 import com.musictick.Session;
 import com.musictick.dao.TicketDAO;
 import com.musictick.manager.TransferTicketManager;
-import com.musictick.model.Ticket;
+import models.Ticket;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

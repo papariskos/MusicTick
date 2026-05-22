@@ -1,7 +1,7 @@
 package com.musictick.manager;
 
 import com.musictick.dao.AlertDAO;
-import com.musictick.model.Alert;
+import models.Notification;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 public class NotificationManager {
     private final AlertDAO alertDAO = new AlertDAO();
 
-    public List<Alert> checkNewAlerts(int currentUserId) throws SQLException {
+    public List<Notification> checkNewAlerts(int currentUserId) throws SQLException {
         return alertDAO.returnAlerts(currentUserId);
     }
 

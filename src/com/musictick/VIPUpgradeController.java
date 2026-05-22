@@ -1,5 +1,6 @@
 package com.musictick;
 
+import com.musictick.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,8 +21,7 @@ public class VIPUpgradeController {
 
     private final VIPUpgradeManager vipUpgradeManager = new VIPUpgradeManager();
 
-    // Προσωρινό μέχρι να συνδεθεί με login/session.
-    private final int currentUserId = 1;
+    private final int currentUserId = Session.getCurrentUserId();
 
     @FXML
     public void initialize() {
