@@ -1,31 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.PasswordField?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musictick.SignUpController">
-    <fx:define>
-        <ToggleGroup fx:id="roleGroup" />
-    </fx:define>
-    <TextField fx:id="firstNameField" promptText="First Name"/>
-    <TextField fx:id="lastNameField" promptText="Last Name"/>
-    <TextField fx:id="emailField" promptText="Email"/>
-    <VBox spacing="5">
-        <Label text="Role" />
-        <HBox spacing="10">
-            <RadioButton fx:id="userRadio" text="User" selected="true" toggleGroup="$roleGroup" />
-            <RadioButton fx:id="organizerRadio" text="Organizer" toggleGroup="$roleGroup" />
-        </HBox>
-    </VBox>
-    <PasswordField fx:id="passwordField" promptText="Password"/>
-    <PasswordField fx:id="confirmField" promptText="Confirm Password"/>
-    <Button text="Register" onAction="#handleSignUp"/>
-    <Button fx:id="returnButton" text="Return to Login" onAction="#goToLogin" visible="false" managed="false"/>
-    <Label fx:id="errorLabel" textFill="red" />
-    <Label fx:id="messageLabel" textFill="green" />
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #0b0f19;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://scene.com/fxml/1" fx:controller="com.musictick.SignUpController">
+   <children>
+      <VBox alignment="CENTER" maxWidth="420.0" spacing="15.0" style="-fx-background-color: #151d30; -fx-background-radius: 15; -fx-border-color: #00f3ff; -fx-border-width: 1.5; -fx-border-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.4), 20, 0.4, 0, 0);">
+         <padding>
+            <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+         </padding>
+         <children>
+            <fx:define>
+               <ToggleGroup fx:id="roleGroup" />
+            </fx:define>
+            <VBox alignment="CENTER" spacing="5.0">
+               <children>
+                  <Label text="Εγγραφή Χρήστη" textFill="#ff007f">
+                     <font>
+                        <Font name="System Bold" size="26.0" />
+                     </font>
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(255,0,127,0.8), 12, 0.5, 0, 0);
+                     </style>
+                  </Label>
+                  <Label text="Γίνετε μέλος της κοινότητας MusicTick" textFill="#00f3ff">
+                     <font>
+                        <Font name="System Italic" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox spacing="10.0">
+               <children>
+                  <TextField fx:id="firstNameField" prefHeight="38.0" promptText="Όνομα" style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-prompt-text-fill: #5c6b84; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                  <TextField fx:id="lastNameField" prefHeight="38.0" promptText="Επώνυμο" style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-prompt-text-fill: #5c6b84; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                  <TextField fx:id="emailField" prefHeight="38.0" promptText="Email" style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-prompt-text-fill: #5c6b84; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                  
+                  <VBox spacing="5.0" style="-fx-padding: 5 0 5 0;">
+                     <children>
+                        <Label text="Ρόλος Χρήστη:" textFill="#00f3ff">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <HBox spacing="20.0">
+                           <children>
+                              <RadioButton fx:id="userRadio" mnemonicParsing="false" selected="true" text="Πελάτης" textFill="white" toggleGroup="$roleGroup">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="organizerRadio" mnemonicParsing="false" text="Διοργανωτής" textFill="white" toggleGroup="$roleGroup">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </RadioButton>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+
+                  <PasswordField fx:id="passwordField" prefHeight="38.0" promptText="Κωδικός Πρόσβασης" style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-prompt-text-fill: #5c6b84; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                  <PasswordField fx:id="confirmField" prefHeight="38.0" promptText="Επιβεβαίωση Κωδικού" style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-prompt-text-fill: #5c6b84; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5;" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0">
+               <children>
+                  <Label fx:id="errorLabel" textFill="#ff4757" wrapText="true">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="messageLabel" textFill="#2ecc71" wrapText="true">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox spacing="10.0">
+               <children>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleSignUp" prefHeight="38.0" style="-fx-background-color: #ff007f; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="ΕΓΓΡΑΦΗ 🚀">
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(255,0,127,0.6), 10, 0.4, 0, 0);
+                     </style>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="returnButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToLogin" prefHeight="38.0" style="-fx-background-color: #00f3ff; -fx-text-fill: #0b0f19; -fx-font-weight: bold; -fx-background-radius: 5;" text="ΕΠΙΣΤΡΟΦΗ ΣΤΟ LOGIN ⬅️" visible="false" managed="false">
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.6), 10, 0.4, 0, 0);
+                     </style>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goToLogin" prefHeight="38.0" style="-fx-background-color: transparent; -fx-text-fill: #00f3ff; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-border-width: 1.5; -fx-background-radius: 5; -fx-font-weight: bold;" text="Έχετε λογαριασμό; Login 🔑">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
 </VBox>

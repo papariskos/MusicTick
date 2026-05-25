@@ -41,9 +41,21 @@ public class NotificationsController {
     @FXML
     private void goBack() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/user_home.fxml"));
+            String fxml = "/user_home.fxml";
+            int width = 900;
+            int height = 600;
+            if ("ORGANIZER".equals(Session.getCurrentUserRole())) {
+                fxml = "/organizer_home.fxml";
+                width = 800;
+                height = 600;
+            } else if ("ADMIN".equals(Session.getCurrentUserRole())) {
+                fxml = "/admin_home.fxml";
+                width = 850;
+                height = 600;
+            }
+            Parent root = FXMLLoader.load(getClass().getResource(fxml));
             Stage stage = Main.getPrimaryStage();
-            stage.setScene(new Scene(root, 900, 600));
+            stage.setScene(new Scene(root, width, height));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -4,14 +4,41 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class HomeController {
 
     @FXML
+    private TextField homeSearchField;
+
+    @FXML
+    private void handleHomeSearch() {
+        if (homeSearchField == null)
+            return;
+        String terms = homeSearchField.getText().trim();
+        if (terms.isEmpty())
+            return;
+
+        try {
+            var searchManager = new com.musictick.manager.SearchManager();
+            var results = searchManager.searchConcerts(terms);
+            if (results.isEmpty()) {
+                com.musictick.controller.BookingFailureController.failureMessage = "Δεν βρέθηκαν αποτελέσματα για: "
+                        + terms;
+                openPage("/booking_failure.fxml", "MusicTick - Αποτυχία", 800, 550);
+            } else {
+                com.musictick.controller.SearchController.lastSearchResults = results;
+                openPage("/results.fxml", "MusicTick - Αποτελέσματα Αναζήτησης", 800, 550);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void handleConcerts() {
-        System.out.println("Opening Concerts...");
-        // Εδώ θα φορτώνεις το fxml των συναυλιών
+        openPage("/search.fxml", "MusicTick - Search Concerts", 800, 550);
     }
 
     @FXML
@@ -47,6 +74,7 @@ public class HomeController {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void handleTransferTicket() {
         openPage("/transfer_ticket.fxml", "MusicTick - Transfer Ticket", 800, 550);
@@ -76,7 +104,8 @@ public class HomeController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-}
+    }
+
     @FXML
     private void handleReviews() {
         openPage("/review_display.fxml", "MusicTick - Reviews", 800, 550);
@@ -86,5 +115,4 @@ public class HomeController {
     private void handleVIPUpgrade() {
         openPage("/vip_upgrade.fxml", "MusicTick - VIP Upgrade", 800, 550);
     }
-
 }

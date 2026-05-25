@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #0b0f19;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://scene.com/fxml/1" fx:controller="com.musictick.controller.OrganizerController">
+   <children>
+      <VBox alignment="CENTER" maxWidth="450.0" spacing="20.0" style="-fx-background-color: #151d30; -fx-background-radius: 15; -fx-border-color: #00f3ff; -fx-border-width: 1.5; -fx-border-radius: 15; -fx-padding: 35; -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.4), 20, 0.4, 0, 0);">
+         <children>
+            <VBox alignment="CENTER" spacing="5.0" style="-fx-padding: 0 0 10 0;">
+               <children>
+                  <Label text="Έλεγχος Εισιτηρίων 📷" textFill="#ff007f">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(255,0,127,0.7), 10, 0.4, 0, 0);
+                     </style>
+                  </Label>
+                  <Label text="Σκανάρετε το QR Code του εισιτηρίου κατά την είσοδο" textFill="#00f3ff">
+                     <font>
+                        <Font name="System Italic" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            
+            <TextField fx:id="qrCodeField" prefHeight="42.0" prefWidth="380.0" promptText="Εισάγετε QR Code ή Κωδικός Εισιτηρίου..." style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-prompt-text-fill: #5c6b84; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10;" />
+            
+            <Label fx:id="statusLabel" textFill="#2ecc71" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            
+            <VBox spacing="10.0" style="-fx-padding: 10 0 0 0;">
+               <children>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleScanTicket" prefHeight="42.0" style="-fx-background-color: #00f3ff; -fx-text-fill: #0b0f19; -fx-font-weight: bold; -fx-background-radius: 5;" text="ΣΑΡΩΣΗ &amp; ΕΠΙΚΥΡΩΣΗ 🎫">
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.6), 10, 0.4, 0, 0);
+                     </style>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#goBack" prefHeight="42.0" style="-fx-background-color: transparent; -fx-text-fill: #ff007f; -fx-border-color: #ff007f; -fx-border-radius: 5; -fx-border-width: 1.5; -fx-background-radius: 5; -fx-font-weight: bold;" text="ΕΠΙΣΤΡΟΦΗ ⬅️">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>

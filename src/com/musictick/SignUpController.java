@@ -45,9 +45,6 @@ public class SignUpController {
         String password = passwordField.getText();
         String confirm  = confirmField.getText();
 
-        errorLabel.setText("");
-        messageLabel.setText("");
-
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()) {
             errorLabel.setText("Παρακαλώ συμπληρώστε όλα τα πεδία.");
             return;
@@ -70,14 +67,35 @@ public class SignUpController {
             ps.setString(5, role);
             ps.executeUpdate();
 
-            messageLabel.setText("Επιτυχής εγγραφή! Πάτησε Επιστροφή στο Login.");
-            if (returnButton != null) {
-                returnButton.setVisible(true);
-                returnButton.setManaged(true);
-            }
+            openSuccessScreen();
         } catch (SQLException e) {
             e.printStackTrace();
-            errorLabel.setText("Σφάλμα κατά την εγγραφή. Ίσως το email υπάρχει ήδη.");
+            openFailureScreen("Αποτυχία εγγραφής. Ίσως το email υπάρχει ήδη καταχωρημένο.");
+        }
+    }
+
+    private void openSuccessScreen() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/success.fxml"));
+            Stage stage = (Stage) firstNameField.getScene().getWindow();
+            stage.setScene(new Scene(root, 600, 450));
+            stage.setTitle("MusicTick - Επιτυχία");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openFailureScreen(String msg) {
+        try {
+            com.musictick.controller.BookingFailureController.failureMessage = msg;
+            com.musictick.controller.BookingFailureController.backTargetFxml = "/signup.fxml";
+            com.musictick.controller.BookingFailureController.backTargetTitle = "MusicTick - Register";
+            Parent root = FXMLLoader.load(getClass().getResource("/booking_failure.fxml"));
+            Stage stage = (Stage) firstNameField.getScene().getWindow();
+            stage.setScene(new Scene(root, 800, 550));
+            stage.setTitle("MusicTick - Αποτυχία");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

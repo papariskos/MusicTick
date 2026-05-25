@@ -1,11 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Button?>
 
-<VBox alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musictick.HomeController">
-    <Label text="Admin Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-    <Button text="Manage Users"/>
-    <Button text="System Logs"/>
-    <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: red; -fx-text-fill: white;"/>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #0b0f19;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://scene.com/fxml/1" fx:controller="com.musictick.controller.AdminController">
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+   <children>
+      <VBox alignment="CENTER" maxWidth="750.0" spacing="20.0" style="-fx-background-color: #151d30; -fx-background-radius: 15; -fx-border-color: #00f3ff; -fx-border-width: 1.5; -fx-border-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.4), 20, 0.4, 0, 0);">
+         <children>
+            <VBox alignment="CENTER" spacing="5.0">
+               <children>
+                  <Label text="MusicTick Admin Dashboard ⚡" textFill="#ff007f">
+                     <font>
+                        <Font name="System Bold" size="26.0" />
+                     </font>
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(255,0,127,0.7), 10, 0.4, 0, 0);
+                     </style>
+                  </Label>
+                  <Label text="Κέντρο Ελέγχου &amp; Διαχείρισης Συστήματος" textFill="#00f3ff">
+                     <font>
+                        <Font name="System Italic" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            
+            <HBox spacing="20.0">
+               <children>
+                  <!-- Concert Approval Panel -->
+                  <VBox prefWidth="340.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Συναυλίες προς Έγκριση" textFill="white" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                        <ListView fx:id="pendingConcertsListView" prefHeight="200.0" style="-fx-background-color: #0b0f19; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5; -fx-text-fill: white;" />
+                        <HBox spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#handleRejectConcert" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-text-fill: #ff007f; -fx-border-color: #ff007f; -fx-border-width: 1.2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-font-weight: bold;" text="Reject ❌" />
+                              <Button mnemonicParsing="false" onAction="#handleApproveConcert" prefHeight="35.0" prefWidth="160.0" style="-fx-background-color: #00f3ff; -fx-text-fill: #0b0f19; -fx-font-weight: bold; -fx-background-radius: 5;" text="Approve ✔️">
+                                 <style>
+                                    -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.4), 8, 0.4, 0, 0);
+                                 </style>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  
+                  <!-- Forum Management Panel -->
+                  <VBox prefWidth="340.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Αναφορές Forum" textFill="white" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                        <ListView fx:id="forumReportsListView" prefHeight="200.0" style="-fx-background-color: #0b0f19; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5; -fx-text-fill: white;" />
+                        <HBox spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#handleLockThread" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-text-fill: #ff007f; -fx-border-color: #ff007f; -fx-border-width: 1.2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-font-weight: bold;" text="Lock Thread 🔒" />
+                              <Button mnemonicParsing="false" onAction="#handleDeletePost" prefHeight="35.0" prefWidth="160.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Delete Post 🗑️">
+                                 <style>
+                                    -fx-effect: dropshadow(three-pass-box, rgba(231,76,60,0.4), 8, 0.4, 0, 0);
+                                 </style>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            
+            <Label fx:id="statusLabel" textFill="#2ecc71">
+               <font>
+                  <Font size="13.5" />
+               </font>
+            </Label>
+            
+            <Separator style="-fx-opacity: 0.15; -fx-background-color: #00f3ff;" />
+            
+            <HBox spacing="20.0" alignment="CENTER">
+               <children>
+                  <Button onAction="#handleNotifications" prefHeight="38.0" prefWidth="180.0" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" text="Notifications 🔔" />
+                  <Button onAction="#handleLogout" prefHeight="38.0" prefWidth="180.0" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" text="Logout ⬅️" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
 </VBox>

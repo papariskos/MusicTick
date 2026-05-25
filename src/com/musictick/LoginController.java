@@ -19,9 +19,12 @@ import java.sql.SQLException;
 
 public class LoginController {
 
-    @FXML private TextField emailField;
-    @FXML private PasswordField passwordField;
-    @FXML private Label errorLabel;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private Label errorLabel;
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/musictick?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     private static final String DB_USER = "root";
@@ -48,12 +51,12 @@ public class LoginController {
             String sql = "SELECT user_id, password_hash, role FROM users WHERE email = ?";
 
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                    PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, email);
                 ResultSet rs = ps.executeQuery();
 
                 if (!rs.next()) {
-                    errorLabel.setText("Λάθος email ή κωδικός.");
+                    openFailureScreen("Λάθος email ή κωδικός σύνδεσης. Ο χρήστης δεν βρέθηκε.");
                     return;
                 }
 
@@ -65,27 +68,48 @@ public class LoginController {
                     Session.setCurrentUserRole(rs.getString("role"));
                     openHomePage();
                 } else {
-                    errorLabel.setText("Λάθος email ή κωδικός.");
+                    openFailureScreen("Λάθος email ή κωδικός σύνδεσης. Ελέγξτε τα στοιχεία σας.");
                 }
             }
         } catch (SQLException sqe) {
             sqe.printStackTrace();
-            errorLabel.setText("Σφάλμα σύνδεσης στη βάση.");
+            openFailureScreen("Σφάλμα σύνδεσης στη βάση δεδομένων.");
         } catch (Exception e) {
             e.printStackTrace();
-            errorLabel.setText("Σφάλμα ανοίγματος της σελίδας.");
+            openFailureScreen("Σφάλμα κατά τη φόρτωση της αρχικής σελίδας.");
+        }
+    }
+
+    private void openFailureScreen(String msg) {
+        try {
+            com.musictick.controller.BookingFailureController.failureMessage = msg;
+            com.musictick.controller.BookingFailureController.backTargetFxml = "/login.fxml";
+            com.musictick.controller.BookingFailureController.backTargetTitle = "MusicTick - Login";
+            Parent root = FXMLLoader.load(getClass().getResource("/booking_failure.fxml"));
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root, 800, 550));
+            stage.setTitle("MusicTick - Αποτυχία");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void openHomePage() throws Exception {
         String fxml = "/user_home.fxml";
+        int width = 800;
+        int height = 600;
+
         if ("ORGANIZER".equals(Session.getCurrentUserRole())) {
             fxml = "/organizer_home.fxml";
+        } else if ("ADMIN".equals(Session.getCurrentUserRole())) {
+            fxml = "/admin_home.fxml";
+            width = 850;
+            height = 600;
         }
 
         Parent root = FXMLLoader.load(getClass().getResource(fxml));
         Stage stage = (Stage) emailField.getScene().getWindow();
-        stage.setScene(new Scene(root, 800, 600));
+        stage.setScene(new Scene(root, width, height));
     }
 
     @FXML
