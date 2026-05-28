@@ -43,7 +43,7 @@ public class MyTicketsController {
 
         // Query database for active tickets strictly!
         try (Connection conn = DBConfig.getConnection()) {
-            String sql = "SELECT t.ticket_id, c.title, s.section_name, s.row_label, s.seat_number " +
+            String sql = "SELECT t.ticket_id, c.concert_id, c.title, s.section_name, s.row_label, s.seat_number " +
                          "FROM tickets t " +
                          "JOIN concerts c ON t.concert_id = c.concert_id " +
                          "JOIN seats s ON t.seat_id = s.seat_id " +
@@ -52,7 +52,7 @@ public class MyTicketsController {
                 ps.setInt(1, currentUserId);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
-                        String ticketDetails = "Ticket #" + rs.getInt("ticket_id") + " - " + rs.getString("title") +
+                        String ticketDetails = "Ticket #" + rs.getInt("ticket_id") + " [Concert ID: " + rs.getInt("concert_id") + "] - " + rs.getString("title") +
                                 " | Section " + rs.getString("section_name") + ", Row " + rs.getString("row_label") + ", Seat " + rs.getString("seat_number");
                         tickets.add(ticketDetails);
                     }
