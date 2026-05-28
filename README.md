@@ -1,6 +1,6 @@
 # 🎫 MusicTick — Neon Rhythm Ticketing Platform
 
-Ολοκληρωμένο σύστημα αγοράς και διαχείρισης εισιτηρίων συναυλιών, βασισμένο σε **Java + JavaFX + MySQL**. Υποστηρίζει ρόλους Πελάτη, Διοργανωτή και Διαχειριστή (Admin), με πλήρες offline fallback μέσω τοπικών αρχείων `.txt`.
+Ένα ολοκληρωμένο, premium σύστημα αγοράς και διαχείρισης εισιτηρίων συναυλιών, βασισμένο σε **Java + JavaFX + MySQL**. Υποστηρίζει ρόλους Πελάτη (Customer), Διοργανωτή (Organizer) και Διαχειριστή (Admin), με απόλυτη εστίαση σε μια **100% καθαρή αρχιτεκτονική βάσης δεδομένων (Pure Database Only)** χωρίς hybrid ή offline modes.
 
 ---
 
@@ -8,27 +8,25 @@
 
 1. [Προαπαιτούμενα](#1-προαπαιτούμενα)
 2. [Δομή Project](#2-δομή-project)
-3. [Εγκατάσταση Βάσης Δεδομένων (MySQL)](#3-εγκατάσταση-βάσης-δεδομένων-mysql)
-4. [Εκτέλεση Εφαρμογής](#4-εκτέλεση-εφαρμογής)
+3. [Ρύθμιση & Εγκατάσταση Βάσης Δεδομένων (MySQL)](#3-ρύθμιση--εγκατάσταση-βάσης-δεδομένων-mysql)
+4. [Εκτέλεση της Εφαρμογής](#4-εκτέλεση-της-εφαρμογής)
 5. [Διαπιστευτήρια Χρηστών (Test Credentials)](#5-διαπιστευτήρια-χρηστών-test-credentials)
-6. [Εκτέλεση Automated Tests](#6-εκτέλεση-automated-tests)
-7. [Offline Mode (Χωρίς Βάση)](#7-offline-mode-χωρίς-βάση)
-8. [Βασικά Χαρακτηριστικά](#8-βασικά-χαρακτηριστικά)
+6. [Εκτέλεση της Αυτόματης Σουίτας Δοκιμών (Automated Tests)](#6-εκτέλεση-της-αυτόματης-σουίτας-δοκιμών-automated-tests)
+7. [Αρχιτεκτονική & Χαρακτηριστικά](#7-αρχιτεκτονική--χαρακτηριστικά)
+8. [Αντιμετώπιση Προβλημάτων (Troubleshooting)](#8-αντιμετώπιση-προβλημάτων-troubleshooting)
 
 ---
 
 ## 1. Προαπαιτούμενα
 
-Βεβαιωθείτε ότι έχετε εγκαταστήσει τα παρακάτω πριν ξεκινήσετε:
+Βεβαιωθείτε ότι έχετε εγκαταστήσει τα παρακάτω στο σύστημά σας:
 
 | Εργαλείο | Ελάχιστη Έκδοση | Λήψη |
 |---|---|---|
-| **Java JDK** | 17+ | https://www.oracle.com/java/technologies/downloads/ |
-| **MySQL Server** | 8.0+ | https://dev.mysql.com/downloads/mysql/ |
-| **JavaFX SDK** | 17+ | Ήδη ενσωματωμένο στο `libs/javafx-lib/` |
-| **MySQL Connector** | — | Ήδη ενσωματωμένο στο `libs/mysql-connector-java.jar` |
-
-> **Σημείωση:** Δεν χρειάζεται να κατεβάσετε JavaFX ή MySQL Connector ξεχωριστά — βρίσκονται ήδη στον φάκελο `libs/`.
+| **Java JDK** | 17+ (Συνίσταται JDK 21+) | [Oracle Java Downloads](https://www.oracle.com/java/technologies/downloads/) |
+| **MySQL Server** | 8.0+ | [MySQL Community Downloads](https://dev.mysql.com/downloads/mysql/) |
+| **JavaFX SDK** | 17+ | *Περιλαμβάνεται ήδη στο φάκελο `libs/javafx-lib/`* |
+| **MySQL Connector** | — | *Περιλαμβάνεται ήδη στο φάκελο `libs/mysql-connector-java.jar`* |
 
 ---
 
@@ -41,116 +39,87 @@ MusicTick/
 │   │   ├── controller/         # JavaFX Controllers (UI logic)
 │   │   ├── dao/                # Data Access Objects (DB queries)
 │   │   ├── manager/            # Business Logic Managers
+│   │   ├── ConcertManager.java # Service layer διαχείρισης συναυλιών
+│   │   ├── DBConfig.java       # Κεντρική ρύθμιση σύνδεσης MySQL
 │   │   ├── Main.java           # Entry point της εφαρμογής
-│   │   └── MusicTickTestRunner.java  # Automated test suite
+│   │   └── MusicTickTestRunner.java  # Σουίτα αυτόματων δοκιμών
 │   ├── database/
 │   │   └── musictick.sql       # Script δημιουργίας & αρχικοποίησης DB
 │   └── *.fxml                  # UI layout αρχεία (JavaFX)
 ├── libs/
-│   ├── javafx-lib/             # JavaFX JARs
-│   └── mysql-connector-java.jar
-├── approved_concerts.txt       # Offline fallback: εγκεκριμένες συναυλίες
-├── pending_concerts.txt        # Offline fallback: εκκρεμείς συναυλίες
-├── forum_reports.txt           # Offline fallback: αναφορές forum
-├── forum_posts_mock.txt        # Offline fallback: δημοσιεύσεις forum
-├── purchased_tickets.txt       # Offline fallback: εισιτήρια
-├── alerts.txt                  # Offline fallback: ειδοποιήσεις
-└── run.sh                      # Script εκτέλεσης
+│   ├── javafx-lib/             # JavaFX SDK βιβλιοθήκες (.jar)
+│   └── mysql-connector-java.jar # MySQL JDBC Driver
+├── README.md                   # Οδηγίες χρήσης
+└── run.sh                      # Shell script μεταγλώττισης & εκτέλεσης
 ```
 
 ---
 
-## 3. Εγκατάσταση Βάσης Δεδομένων (MySQL)
+## 3. Ρύθμιση & Εγκατάσταση Βάσης Δεδομένων (MySQL)
 
-### Βήμα 1: Ξεκινήστε τον MySQL Server
+### Βήμα 1: Εκκίνηση του MySQL Server
 
-**macOS (Homebrew):**
-```bash
-brew services start mysql
+- **macOS (μέσω Homebrew):**
+  ```bash
+  brew services start mysql
+  ```
+- **macOS (Installer):**
+  Εκκινήστε τον MySQL Server από τα System Settings (Προτιμήσεις Συστήματος).
+- **Windows / Linux:**
+  Βεβαιωθείτε ότι ο MySQL Server είναι ενεργοποιημένος και τρέχει.
+
+### Βήμα 2: Παραμετροποίηση Σύνδεσης (Προαιρετικό)
+
+Όλα τα στοιχεία σύνδεσης της εφαρμογής είναι κεντρικοποιημένα στο αρχείο:
+[DBConfig.java](file:///Users/alex/Desktop/CEID/MusicTick/src/com/musictick/DBConfig.java)
+
+Αν ο τοπικός σας MySQL root χρήστης απαιτεί κωδικό, ανοίξτε το αρχείο και τροποποιήστε τις σταθερές:
+```java
+public static final String DB_USER = "root";
+public static final String DB_PASSWORD = "ο_κωδικος_σας";
 ```
 
-**macOS (MySQL.app ή installer):**
-Ανοίξτε το MySQL Workbench ή εκκινήστε τον server από τις Προτιμήσεις Συστήματος.
+### Βήμα 3: Εισαγωγή της Βάσης Δεδομένων & Seed Data
 
-**Linux:**
-```bash
-sudo systemctl start mysql
-```
-
-### Βήμα 2: Εκτελέστε το SQL Script
-
-Ανοίξτε τερματικό (Terminal) και τρέξτε:
+Ανοίξτε το τερματικό και εκτελέστε το SQL Script για να δημιουργηθούν αυτόματα η βάση δεδομένων `musictick`, οι πίνακες, τα indexes και τα seed δεδομένα:
 
 ```bash
 cd /Users/alex/Desktop/CEID/MusicTick
 mysql -u root -p < src/database/musictick.sql
 ```
-
-> Πατήστε **Enter** αν ο root δεν έχει κωδικό (προεπιλογή για τοπική ανάπτυξη).
-
-Το script:
-- Δημιουργεί τη βάση δεδομένων `musictick`
-- Δημιουργεί όλους τους πίνακες (users, concerts, tickets, orders, forum_posts, κ.α.)
-- Εισάγει αρχικά δεδομένα: 3 Venues, 3 Concerts (APPROVED), 3 Users, Ticket Types και Forum Posts
-
-### Βήμα 3: Επαλήθευση (προαιρετικό)
-
-```bash
-mysql -u root -p musictick -e "SELECT user_id, email, role FROM users;"
-```
-
-Αναμενόμενο αποτέλεσμα:
-```
-+---------+---------------------------+----------+
-| user_id | email                     | role     |
-+---------+---------------------------+----------+
-|       1 | user@musictick.com        | CUSTOMER |
-|       2 | organizer@musictick.com   | ORGANIZER|
-|       3 | admin@musictick.com       | ADMIN    |
-+---------+---------------------------+----------+
-```
-
-> **Σύνδεση DB:** Η εφαρμογή συνδέεται αυτόματα στο `jdbc:mysql://localhost:3306/musictick` με username `root` και κενό κωδικό. Αν έχετε διαφορετικό κωδικό root, αλλάξτε το στο αρχείο `src/com/musictick/dao/BookingDAO.java` (ή στο αντίστοιχο DAO).
+*(Αν δεν έχετε κωδικό root, πατήστε απλώς **Enter**).*
 
 ---
 
-## 4. Εκτέλεση Εφαρμογής
+## 4. Εκτέλεση της Εφαρμογής
 
-Από τον κεντρικό φάκελο του project, τρέξτε:
+Μπορείτε να εκτελέσετε την εφαρμογή εύκολα μέσω του script `run.sh` που αναλαμβάνει αυτόματα τη μεταγλώττιση, την αντιγραφή των UI πόρων και την εκτέλεση:
 
 ```bash
 cd /Users/alex/Desktop/CEID/MusicTick
+chmod +x run.sh
 ./run.sh
 ```
 
-> Αν εμφανιστεί σφάλμα δικαιωμάτων, πρώτα κάντε:
-> ```bash
-> chmod +x run.sh
-> ./run.sh
-> ```
-
-Το `run.sh` κάνει αυτόματα:
-1. **Μεταγλώττιση (compile)** όλων των `.java` αρχείων στον φάκελο `out/`
-2. **Αντιγραφή** των FXML αρχείων UI στον `out/`
-3. **Εκκίνηση** της εφαρμογής από την κλάση `com.musictick.Main`
-
 ### Χειροκίνητη Μεταγλώττιση & Εκτέλεση
 
-Αν θέλετε να τα τρέξετε ξεχωριστά:
+Αν επιθυμείτε να εκτελέσετε τα βήματα χειροκίνητα:
 
 ```bash
-# Compile
+# 1. Δημιουργία φακέλου εξόδου
 mkdir -p out
+
+# 2. Μεταγλώττιση
 javac --module-path libs/javafx-lib \
       --add-modules javafx.controls,javafx.fxml \
       -d out \
       -cp libs/mysql-connector-java.jar \
       $(find src -name "*.java")
 
-# Copy FXML
+# 3. Αντιγραφή FXML UI layouts
 cp src/*.fxml out/
 
-# Run
+# 4. Εκτέλεση της εφαρμογής
 java --module-path libs/javafx-lib \
      --add-modules javafx.controls,javafx.fxml \
      --enable-native-access=javafx.graphics \
@@ -163,34 +132,26 @@ java --module-path libs/javafx-lib \
 
 ## 5. Διαπιστευτήρια Χρηστών (Test Credentials)
 
-Μόλις ανοίξει η εφαρμογή, χρησιμοποιήστε τα παρακάτω για είσοδο:
+Για να δοκιμάσετε την εφαρμογή, χρησιμοποιήστε τους ακόλουθους λογαριασμούς:
 
 | Ρόλος | Email / Username | Κωδικός | Περιγραφή |
 |---|---|---|---|
-| **Admin** | `admin` ή `admin@musictick.com` | `admin` | Πλήρης πρόσβαση: διαχείριση συναυλιών, εγκρίσεις, Forum moderation |
-| **Customer** | `user` ή `user@musictick.com` | `user` | Αγορά εισιτηρίων, μεταφορά, ακύρωση, forum |
-| **Organizer** | `organizer@musictick.com` | `organizer` | Δημιουργία συναυλιών, διαχείριση events |
+| **Admin** | `admin` ή `admin@musictick.com` | `admin` | Διαχείριση, εγκρίσεις συναυλιών, forum moderation |
+| **Customer** | `user` ή `user@musictick.com` | `user` | Αγορά/μεταφορά/ακύρωση εισιτηρίων, forum reviews |
+| **Organizer** | `organizer@musictick.com` | `organizer` | Δημιουργία συναυλιών, διαχείριση open reports |
 
-> **Tip:** Ο Admin και ο Customer έχουν **shortcut login** — γράψτε απλώς `admin`/`admin` ή `user`/`user`.
+> 💡 **Shortcut Login:** Ο Admin και ο Customer υποστηρίζουν γρήγορη είσοδο πληκτρολογώντας απλώς `admin` ή `user` στα αντίστοιχα πεδία.
 
 ---
 
-## 6. Εκτέλεση Automated Tests
+## 6. Εκτέλεση της Αυτόματης Σουίτας Δοκιμών (Automated Tests)
 
-Το project περιλαμβάνει μια πλήρη αυτόματη σουίτα δοκιμών που καλύπτει **8 modules** (Happy Paths & Alternative Paths):
+Το project περιλαμβάνει μια ριζικά αναβαθμισμένη αυτόματη σουίτα δοκιμών η οποία εκτελεί 10 ολοκληρωμένα σενάρια ελέγχου (Happy & Alternative Paths) σε πραγματικό χρόνο πάνω στη ζωντανή βάση δεδομένων:
 
 ```bash
 cd /Users/alex/Desktop/CEID/MusicTick
 
-# Compile (αν δεν έχει γίνει ήδη)
-mkdir -p out
-javac --module-path libs/javafx-lib \
-      --add-modules javafx.controls,javafx.fxml \
-      -d out \
-      -cp libs/mysql-connector-java.jar \
-      $(find src -name "*.java")
-
-# Εκτέλεση Tests
+# Εκτέλεση της σουίτας δοκιμών
 java --module-path libs/javafx-lib \
      --add-modules javafx.controls,javafx.fxml \
      --enable-native-access=javafx.graphics \
@@ -199,182 +160,44 @@ java --module-path libs/javafx-lib \
      com.musictick.MusicTickTestRunner
 ```
 
-### Ενότητες που ελέγχονται:
+### Τι περιλαμβάνουν τα Tests:
+1. **Login & Registration**: Έλεγχος shortcut login, duplicate email signups και σφαλμάτων κωδικού.
+2. **Search & Buy**: Δυναμική κράτηση θέσεων, simulated Gateway failure και δοκιμή του **Circuit Breaker**.
+3. **Ticket Transfer**: Μεταβίβαση εισιτηρίου σε έγκυρο και ανύπαρκτο email.
+4. **Ticket Cancellation**: Έλεγχος πολιτικής ακύρωσης βάσει χρόνου (<24h).
+5. **Report Problem**: Υποβολή αναφορών προβλημάτων σε active εισιτήρια.
+6. **Forum & Moderation**: Δημιουργία thread/reply, κλείδωμα thread, soft-deletion.
+7. **Notifications**: Ανάκτηση και προβολή των Alerts του χρήστη.
+8. **Admin Concert Deletion**: Ασφαλής και transactional cascading διαγραφή ενεργών συναυλιών.
+9. **VIP Upgrade**: Αναβάθμιση θέσης σε VIP, πληρωμή επιπλέον ποσού και επαλήθευση ορατότητας.
+10. **Concert Review**: Υποβολή αξιολογήσεων, έλεγχος εξουσιοδότησης (ticket holders only) και duplicate reviews block.
 
-| # | Module | Περιγραφή |
-|---|---|---|
-| 1 | **Login & Registration** | Admin/Customer login, λανθασμένα credentials, duplicate email |
-| 2 | **Search & Buy** | Αγορά εισιτηρίου, Gateway failure, Circuit Breaker |
-| 3 | **Ticket Transfer** | Μεταφορά σε εγγεγραμμένο/ανύπαρκτο χρήστη |
-| 4 | **Ticket Cancellation** | Πολιτική ακύρωσης (Allowed / Not Allowed) |
-| 5 | **Report Problem** | Αναφορά σε έγκυρο/ανύπαρκτο εισιτήριο |
-| 6 | **Forum Moderation** | Δημιουργία thread, κλείδωμα, διαγραφή post |
-| 7 | **Notifications** | Φόρτωση ειδοποιήσεων χρήστη |
-| 8 | **Admin Concert Deletion** | Διαγραφή συναυλίας (file + DB transactional) |
-
-Αναμενόμενο τελικό αποτέλεσμα:
-```
+Αναμενόμενο αποτέλεσμα:
+```text
 ✅ ALL MUSIC TICK SYSTEM TESTS COMPLETED SUCCESSFULLY!
 ```
 
 ---
 
-## 7. Offline Mode (Χωρίς Βάση)
+## 7. Αρχιτεκτονική & Χαρακτηριστικά
 
-Αν ο MySQL server **δεν είναι ενεργός**, η εφαρμογή λειτουργεί αυτόματα σε **Offline Mode** χρησιμοποιώντας τοπικά αρχεία `.txt`:
-
-| Αρχείο | Περιεχόμενο |
-|---|---|
-| `approved_concerts.txt` | Εγκεκριμένες συναυλίες |
-| `pending_concerts.txt` | Εκκρεμείς συναυλίες προς έγκριση |
-| `purchased_tickets.txt` | Αγορασμένα εισιτήρια χρηστών |
-| `forum_posts_mock.txt` | Δημοσιεύσεις forum |
-| `forum_reports.txt` | Αναφορές περιεχομένου forum |
-| `alerts.txt` | Ειδοποιήσεις χρηστών |
-
-> Σε Offline Mode εμφανίζεται σχετικό μήνυμα στο console. Όλες οι λειτουργίες που υποστηρίζονται από αρχεία παραμένουν πλήρως λειτουργικές.
+- **100% Pure Database (No Files)**: Όλες οι εγγραφές, ειδοποιήσεις, εισιτήρια και posts αποθηκεύονται στη MySQL. Δεν υπάρχουν πλέον τοπικά txt αρχεία.
+- **SQL Transactions**: Κρίσιμες διαδικασίες (όπως η αγορά εισιτηρίου, η VIP αναβάθμιση και η διαγραφή) εκτελούνται με ACID SQL Transactions (αυτόματο rollback σε περίπτωση αποτυχίας).
+- **Circuit Breaker**: Το σύστημα πληρωμών παρακολουθεί τις αποτυχίες της πύλης πληρωμών και "ανοίγει" τον διακόπτη μετά από 3 συνεχόμενες αποτυχίες για να προστατεύσει το σύστημα.
+- **Cyberpunk Dark Theme**: Πανέμορφη διεπαφή χρήστη με neon-cyan και hot-pink στοιχεία, dropshadows και micro-animations.
 
 ---
 
-## 8. Βασικά Χαρακτηριστικά
+## 8. Αντιμετώπιση Προβλημάτων (Troubleshooting)
 
-- 🔎 **Αναζήτηση Συναυλιών** — Φίλτρα κατά καλλιτέχνη, ημερομηνία, venue
-- 🎟️ **Αγορά Εισιτηρίων** — Regular & VIP θέσεις, επεξεργασία πληρωμής με Circuit Breaker
-- 🔄 **Μεταφορά Εισιτηρίου** — Transfer σε άλλον εγγεγραμμένο χρήστη
-- ❌ **Ακύρωση & Επιστροφή** — Έλεγχος πολιτικής ακύρωσης (<24h block)
-- 💎 **VIP Upgrade** — Αναβάθμιση θέσης την τελευταία στιγμή
-- 📋 **Forum** — Δημιουργία threads, replies, lock/delete από Admin
-- 🔔 **Ειδοποιήσεις** — Αυτόματες alerts για μεταφορές, ακυρώσεις, post deletions
-- 🛡️ **Admin Panel** — Έγκριση/Απόρριψη συναυλιών, Ενεργές Συναυλίες, Forum Moderation
-- 🗄️ **Dual Mode** — Online (MySQL) + Offline (txt fallback) χωρίς καμία αλλαγή κώδικα
+### ❌ Σφάλμα `Communications link failure`
+Η MySQL δεν είναι ενεργή. Εκκινήστε τον MySQL Server (π.χ. `brew services start mysql` στο macOS) και βεβαιωθείτε ότι τρέχει στη θύρα 3306.
 
----
+### ❌ Σφάλμα `Access denied for user 'root'@'localhost'`
+Ο root χρήστης σας στη MySQL έχει κωδικό πρόσβασης. Ανοίξτε το αρχείο `src/com/musictick/DBConfig.java` και προσθέστε τον κωδικό σας στη μεταβλητή `DB_PASSWORD`.
 
-## ⚙️ Tech Stack
-
-| Layer | Τεχνολογία |
-|---|---|
-| **UI** | JavaFX 17 + FXML |
-| **Backend Logic** | Java 17 |
-| **Database** | MySQL 8.0 |
-| **Connectivity** | MySQL Connector/J |
-| **Offline Fallback** | Plain text files (`.txt`) |
-
----
-
-## 🧭 Οδηγός Χρήσης ανά Ρόλο
-
-### 👤 Customer (Πελάτης)
-
-| Ενέργεια | Βήματα |
-|---|---|
-| **Αγορά εισιτηρίου** | Σύνδεση → Αναζήτηση Συναυλιών → Επιλογή → Επιλογή θέσης (Regular/VIP) → Εισαγωγή κάρτας → Επιβεβαίωση |
-| **Μεταφορά εισιτηρίου** | Τα εισιτήριά μου → Επιλογή εισιτηρίου → Transfer → Email παραλήπτη |
-| **Ακύρωση εισιτηρίου** | Τα εισιτήριά μου → Ακύρωση → Έλεγχος πολιτικής → Επιβεβαίωση |
-| **VIP Upgrade** | Τα εισιτήριά μου → Επιλογή Regular εισιτηρίου → VIP Upgrade |
-| **Αναφορά προβλήματος** | Τα εισιτήριά μου → Report Problem → Συμπλήρωση φόρμας |
-| **Forum** | Αρχική → Forum → Επιλογή Συναυλίας → Δημιουργία/Απάντηση Post |
-| **Ειδοποιήσεις** | Αρχική → Ειδοποιήσεις (🔔) |
-
-> **Shortcut login:** `user` / `user`
-
----
-
-### 🎤 Organizer (Διοργανωτής)
-
-| Ενέργεια | Βήματα |
-|---|---|
-| **Δημιουργία συναυλίας** | Σύνδεση → Πίνακας Διοργανωτή → Νέα Συναυλία → Συμπλήρωση στοιχείων → Υποβολή (→ Admin approval) |
-| **Διαχείριση events** | Πίνακας Διοργανωτή → Οι Συναυλίες μου |
-| **Αποστολή ειδοποιήσεων** | Πίνακας Διοργανωτή → Push Notification σε αγοραστές |
-
-> **Login:** `organizer@musictick.com` / `organizer`
-
----
-
-### 🛡️ Admin (Διαχειριστής)
-
-| Ενέργεια | Βήματα |
-|---|---|
-| **Έγκριση/Απόρριψη συναυλίας** | Admin Panel → Εκκρεμείς Συναυλίες → Approve / Reject |
-| **Διαγραφή ενεργής συναυλίας** | Admin Panel → Ενεργές Συναυλίες → Επιλογή → Διαγραφή 🗑️ |
-| **Forum moderation** | Admin Panel → Αναφορές Forum → Delete / Lock Thread |
-| **Διαχείριση χρηστών** | Admin Panel → Χρήστες |
-
-> **Shortcut login:** `admin` / `admin`
-
----
-
-## 📐 Use Cases — Επισκόπηση
-
-Το σύστημα υλοποιεί τα παρακάτω 10 Use Cases:
-
-| # | Use Case | Actor | Περιγραφή |
-|---|---|---|---|
-| UC1 | **Register / Login** | Customer | Εγγραφή νέου χρήστη & σύνδεση με έλεγχο duplicate email |
-| UC2 | **Search & Buy Ticket** | Customer | Αναζήτηση συναυλίας, επιλογή θέσης, πληρωμή με Circuit Breaker |
-| UC3 | **Transfer Ticket** | Customer | Μεταβίβαση εισιτηρίου σε άλλον εγγεγραμμένο χρήστη |
-| UC4 | **Cancel Ticket** | Customer | Ακύρωση βάσει πολιτικής χρόνου (<24h block) |
-| UC5 | **VIP Upgrade** | Customer | Αναβάθμιση Regular → VIP εισιτηρίου |
-| UC6 | **Report Problem** | Customer | Αναφορά προβλήματος σε εισιτήριο προς τον Διοργανωτή |
-| UC7 | **Forum** | Customer | Δημιουργία threads & replies ανά συναυλία, admin moderation |
-| UC8 | **Manage Concert** | Organizer | Δημιουργία/διαχείριση events + push notifications |
-| UC9 | **Approve/Reject Concert** | Admin | Έλεγχος και έγκριση υποβληθεισών συναυλιών |
-| UC10 | **Manage Active Concerts** | Admin | Προβολή και ασφαλής διαγραφή ενεργών (APPROVED) συναυλιών |
-
----
-
-## 🔧 Troubleshooting
-
-### ❌ `chmod: Permission denied` ή `./run.sh: command not found`
-```bash
-chmod +x run.sh
-./run.sh
-```
-
-### ❌ `Compilation failed` — `error: package javafx.fxml does not exist`
-Βεβαιωθείτε ότι ο φάκελος `libs/javafx-lib/` περιέχει τα αρχεία:
-- `javafx-base.jar`
-- `javafx-controls.jar`
-- `javafx-fxml.jar`
-- `javafx-graphics.jar`
-
-Αν λείπουν, κατεβάστε JavaFX 17 SDK από το https://gluonhq.com/products/javafx/ και αποθηκεύστε τα JARs στο `libs/javafx-lib/`.
-
-### ❌ `Communications link failure` — MySQL δεν ανταποκρίνεται
-```bash
-# macOS — ξεκινήστε MySQL
-brew services start mysql
-# ή
-sudo /usr/local/mysql/support-files/mysql.server start
-```
-Αν η βάση δεν υπάρχει ακόμα, τρέξτε ξανά το SQL script:
+### ❌ Αποτυχία Test Assertions
+Αν κάποιο test αποτύχει λόγω αλλαγής δεδομένων, εκτελέστε ξανά το SQL script για να επαναφέρετε τη βάση στα αρχικά της δεδομένα:
 ```bash
 mysql -u root -p < src/database/musictick.sql
 ```
-
-### ❌ `Access denied for user 'root'@'localhost'`
-Η εφαρμογή χρησιμοποιεί `root` με **κενό κωδικό** ως default. Αν ο MySQL root σας έχει κωδικό, αλλάξτε τη γραμμή σύνδεσης στα αρχεία DAO (π.χ. `BookingDAO.java`, `UserDAO.java`) από:
-```java
-DriverManager.getConnection(DB_URL, "root", "")
-```
-σε:
-```java
-DriverManager.getConnection(DB_URL, "root", "ο_κωδικος_σας")
-```
-
-### ❌ `Test Assertion Failed` στα Automated Tests
-Εκτελέστε ξανά το SQL script για να επαναφέρετε τα seed data:
-```bash
-mysql -u root -p < src/database/musictick.sql
-```
-Στη συνέχεια τρέξτε ξανά τα tests.
-
-### ❌ `NullPointerException` κατά την εκκίνηση
-Βεβαιωθείτε ότι αντιγράψατε τα FXML αρχεία στον φάκελο `out/`:
-```bash
-cp src/*.fxml out/
-```
-
-### ⚠️ Η εφαρμογή τρέχει αλλά εμφανίζει κενά δεδομένα
-Αν η MySQL είναι offline, η εφαρμογή χρησιμοποιεί τα τοπικά `.txt` αρχεία. Αν και αυτά είναι κενά, είναι αναμενόμενη συμπεριφορά — συνδεθείτε στη βάση για πλήρη δεδομένα.
