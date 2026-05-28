@@ -18,6 +18,7 @@ public class CheckAvailabilityController {
                 openPage("/seating_map.fxml", "MusicTick - Επιλογή Θέσης", 800, 550);
             } else {
                 // Navigate to Failure Screen
+                BookingFailureController.currentConcertId = concertId;
                 BookingFailureController.failureMessage = "Δεν υπάρχουν διαθέσιμες θέσεις για αυτή τη συναυλία.";
                 openPage("/booking_failure.fxml", "MusicTick - Μη Διαθέσιμο", 800, 550);
             }

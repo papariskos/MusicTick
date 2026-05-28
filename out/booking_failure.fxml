@@ -43,6 +43,14 @@
                   <Font size="13.0" />
                </font>
             </Button>
+            <Button fx:id="waitlistButton" visible="false" managed="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#joinWaitlist" prefHeight="40.0" style="-fx-background-color: #ff007f; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="⏳ ΕΓΓΡΑΦΗ ΣΤΗ ΛΙΣΤΑ ΑΝΑΜΟΝΗΣ">
+               <style>
+                  -fx-effect: dropshadow(three-pass-box, rgba(255,0,127,0.6), 10, 0.4, 0, 0);
+               </style>
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Button>
          </children>
       </VBox>
    </children>

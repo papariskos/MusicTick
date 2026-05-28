@@ -166,6 +166,7 @@ CREATE TABLE waitlist_entries (
     user_id INT NOT NULL,
     priority_order INT NOT NULL,
     status ENUM('WAITING', 'NOTIFIED', 'RESERVED', 'CANCELLED') NOT NULL DEFAULT 'WAITING',
+    card_details VARCHAR(255) DEFAULT NULL,
     joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (concert_id, user_id),
     FOREIGN KEY (concert_id) REFERENCES concerts(concert_id) ON DELETE CASCADE,
@@ -236,31 +237,20 @@ INSERT INTO venues (venue_id, name, city, address, capacity) VALUES
 (2, 'Metropolis Hall',    'Thessaloniki',  'Egnatia 100, Thessaloniki',  48),
 (3, 'Municipal Theater',  'Patras',        'Georgiou Sq. 1, Patras',     40);
 
--- Athens Arena (venue_id=1) — 2 VIP rows (A,B) × 5 seats + 4 Regular rows (C–F) × 5 seats = 30
+-- Athens Arena (venue_id=1) — 3 VIP seats + 3 Regular seats = 6
 INSERT INTO seats (venue_id, section_name, row_label, seat_number, seat_type) VALUES
-(1,'VIP','A','1','VIP'),(1,'VIP','A','2','VIP'),(1,'VIP','A','3','VIP'),(1,'VIP','A','4','VIP'),(1,'VIP','A','5','VIP'),
-(1,'VIP','B','1','VIP'),(1,'VIP','B','2','VIP'),(1,'VIP','B','3','VIP'),(1,'VIP','B','4','VIP'),(1,'VIP','B','5','VIP'),
-(1,'REGULAR','C','1','REGULAR'),(1,'REGULAR','C','2','REGULAR'),(1,'REGULAR','C','3','REGULAR'),(1,'REGULAR','C','4','REGULAR'),(1,'REGULAR','C','5','REGULAR'),
-(1,'REGULAR','D','1','REGULAR'),(1,'REGULAR','D','2','REGULAR'),(1,'REGULAR','D','3','REGULAR'),(1,'REGULAR','D','4','REGULAR'),(1,'REGULAR','D','5','REGULAR'),
-(1,'REGULAR','E','1','REGULAR'),(1,'REGULAR','E','2','REGULAR'),(1,'REGULAR','E','3','REGULAR'),(1,'REGULAR','E','4','REGULAR'),(1,'REGULAR','E','5','REGULAR'),
-(1,'REGULAR','F','1','REGULAR'),(1,'REGULAR','F','2','REGULAR'),(1,'REGULAR','F','3','REGULAR'),(1,'REGULAR','F','4','REGULAR'),(1,'REGULAR','F','5','REGULAR');
+(1,'VIP','A','1','VIP'),(1,'VIP','A','2','VIP'),(1,'VIP','A','3','VIP'),
+(1,'REGULAR','C','1','REGULAR'),(1,'REGULAR','C','2','REGULAR'),(1,'REGULAR','C','3','REGULAR');
 
--- Metropolis Hall (venue_id=2) — 2 VIP rows × 4 + 4 Regular rows × 4 = 24
+-- Metropolis Hall (venue_id=2) — 3 VIP seats + 3 Regular seats = 6
 INSERT INTO seats (venue_id, section_name, row_label, seat_number, seat_type) VALUES
-(2,'VIP','A','1','VIP'),(2,'VIP','A','2','VIP'),(2,'VIP','A','3','VIP'),(2,'VIP','A','4','VIP'),
-(2,'VIP','B','1','VIP'),(2,'VIP','B','2','VIP'),(2,'VIP','B','3','VIP'),(2,'VIP','B','4','VIP'),
-(2,'REGULAR','C','1','REGULAR'),(2,'REGULAR','C','2','REGULAR'),(2,'REGULAR','C','3','REGULAR'),(2,'REGULAR','C','4','REGULAR'),
-(2,'REGULAR','D','1','REGULAR'),(2,'REGULAR','D','2','REGULAR'),(2,'REGULAR','D','3','REGULAR'),(2,'REGULAR','D','4','REGULAR'),
-(2,'REGULAR','E','1','REGULAR'),(2,'REGULAR','E','2','REGULAR'),(2,'REGULAR','E','3','REGULAR'),(2,'REGULAR','E','4','REGULAR'),
-(2,'REGULAR','F','1','REGULAR'),(2,'REGULAR','F','2','REGULAR'),(2,'REGULAR','F','3','REGULAR'),(2,'REGULAR','F','4','REGULAR');
+(2,'VIP','A','1','VIP'),(2,'VIP','A','2','VIP'),(2,'VIP','A','3','VIP'),
+(2,'REGULAR','C','1','REGULAR'),(2,'REGULAR','C','2','REGULAR'),(2,'REGULAR','C','3','REGULAR');
 
--- Municipal Theater (venue_id=3) — 1 VIP row × 4 + 4 Regular rows × 4 = 20
+-- Municipal Theater (venue_id=3) — 3 VIP seats + 3 Regular seats = 6
 INSERT INTO seats (venue_id, section_name, row_label, seat_number, seat_type) VALUES
-(3,'VIP','A','1','VIP'),(3,'VIP','A','2','VIP'),(3,'VIP','A','3','VIP'),(3,'VIP','A','4','VIP'),
-(3,'REGULAR','B','1','REGULAR'),(3,'REGULAR','B','2','REGULAR'),(3,'REGULAR','B','3','REGULAR'),(3,'REGULAR','B','4','REGULAR'),
-(3,'REGULAR','C','1','REGULAR'),(3,'REGULAR','C','2','REGULAR'),(3,'REGULAR','C','3','REGULAR'),(3,'REGULAR','C','4','REGULAR'),
-(3,'REGULAR','D','1','REGULAR'),(3,'REGULAR','D','2','REGULAR'),(3,'REGULAR','D','3','REGULAR'),(3,'REGULAR','D','4','REGULAR'),
-(3,'REGULAR','E','1','REGULAR'),(3,'REGULAR','E','2','REGULAR'),(3,'REGULAR','E','3','REGULAR'),(3,'REGULAR','E','4','REGULAR');
+(3,'VIP','A','1','VIP'),(3,'VIP','A','2','VIP'),(3,'VIP','A','3','VIP'),
+(3,'REGULAR','B','1','REGULAR'),(3,'REGULAR','B','2','REGULAR'),(3,'REGULAR','B','3','REGULAR');
 
 -- ─── Users Seed Data ─────────────────────────────────────────────────────────
 INSERT INTO users (user_id, first_name, last_name, email, password_hash, role, status) VALUES
@@ -276,12 +266,12 @@ INSERT INTO concerts (concert_id, organizer_id, venue_id, title, description, co
 
 -- ─── Ticket Types Seed Data ──────────────────────────────────────────────────
 INSERT INTO ticket_types (ticket_type_id, concert_id, name, price, quantity) VALUES
-(1, 1, 'REGULAR', 35.00, 20),
-(2, 1, 'VIP', 75.00, 10),
-(3, 2, 'REGULAR', 35.00, 16),
-(4, 2, 'VIP', 75.00, 8),
-(5, 3, 'REGULAR', 35.00, 16),
-(6, 3, 'VIP', 75.00, 4);
+(1, 1, 'REGULAR', 35.00, 3),
+(2, 1, 'VIP', 75.00, 3),
+(3, 2, 'REGULAR', 35.00, 3),
+(4, 2, 'VIP', 75.00, 3),
+(5, 3, 'REGULAR', 35.00, 3),
+(6, 3, 'VIP', 75.00, 3);
 
 -- ─── Forum Posts Seed Data ───────────────────────────────────────────────────
 INSERT INTO forum_posts (post_id, concert_id, user_id, title, content) VALUES

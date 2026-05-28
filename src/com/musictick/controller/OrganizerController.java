@@ -241,6 +241,7 @@ public class OrganizerController {
                     ps.setInt(1, ticketId);
                     ps.executeUpdate();
                 }
+                com.musictick.manager.WaitlistManager.handleTicketCancellation(ticketId);
 
                 conn.commit();
             } catch (SQLException e) {

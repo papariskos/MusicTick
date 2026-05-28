@@ -68,6 +68,9 @@ public class MusicTickTestRunner {
             // 10. CONCERT REVIEW FLOWS
             testConcertReviewFlows();
 
+            // 11. SMART WAITLIST FLOWS
+            testSmartWaitlistFlows();
+
             System.out.println(
                     CYAN + "\n==========================================================================" + RESET);
             System.out.println(GREEN + "✅ ALL MUSIC TICK SYSTEM TESTS COMPLETED SUCCESSFULLY! " + RESET);
@@ -158,7 +161,7 @@ public class MusicTickTestRunner {
         System.out.println(
                 YELLOW + "  [Case A] Happy Path: Searching concert & initiating booking for Regular seat..." + RESET);
         int concertId = 1;
-        int seatId = 15;
+        int seatId = 4;
         BigDecimal price = manager.getTicketPrice(concertId, "REGULAR");
         System.out.println("  Regular Seat Price is: " + price + " EUR");
 
@@ -600,6 +603,82 @@ public class MusicTickTestRunner {
         assertTest(containsReview, "Reviews list should contain our submitted review");
         System.out.println(GREEN
                 + "  [PASS] Concert review authorization, submission, and validation verified successfully." + RESET);
+    }
+
+    private static void testSmartWaitlistFlows() throws Exception {
+        System.out.println(PURPLE + "\n--- [11] TESTING SMART WAITLIST FLOWS ---" + RESET);
+        com.musictick.manager.WaitlistManager waitlistManager = new com.musictick.manager.WaitlistManager();
+
+        // 1. Join waitlist as User 1 for Concert 1 with Card Pre-authorization
+        System.out.println("  Joining waitlist as User 1 for Concert 1 with card pre-auth...");
+        int pr1 = waitlistManager.joinWaitlistWithCard(1, 1, "VISA-PREAUTH-123");
+        System.out.println("  Priority Order received: " + pr1);
+        assertTest(pr1 == 1, "First waitlist entry should have priority order 1");
+
+        // 2. Try duplicate waitlist entry for User 1 on Concert 1 (should be blocked)
+        System.out.println("  Attempting to join waitlist again as User 1 for Concert 1...");
+        int dupPr = waitlistManager.joinWaitlistWithCard(1, 1, "VISA-PREAUTH-456");
+        System.out.println("  Result (expected -2): " + dupPr);
+        assertTest(dupPr == -2, "Duplicate waitlist entry must be blocked and return -2");
+
+        // 3. Join waitlist as User 2 for Concert 1 with Card Pre-authorization
+        System.out.println("  Joining waitlist as User 2 for Concert 1 with card pre-auth...");
+        int pr2 = waitlistManager.joinWaitlistWithCard(2, 1, "VISA-PREAUTH-789");
+        System.out.println("  Priority Order received: " + pr2);
+        assertTest(pr2 == 2, "Second waitlist entry should have priority order 2");
+
+        // 4. Cancel active Ticket createdTicketId1 (owned by User 1) to trigger auto-promotion
+        System.out.println("  Cancelling active Ticket " + createdTicketId1 + " to trigger waitlist auto-promotion...");
+        // Set the ticket status to CANCELLED in DB
+        String sqlCancel = "UPDATE tickets SET status = 'CANCELLED' WHERE ticket_id = ?";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlCancel)) {
+            ps.setInt(1, createdTicketId1);
+            ps.executeUpdate();
+        }
+        
+        // Trigger waitlist promotion
+        com.musictick.manager.WaitlistManager.handleTicketCancellation(createdTicketId1);
+
+        // Verify that User 1 (first in waitlist) was promoted to a new ACTIVE ticket
+        boolean promotedOk = false;
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS total FROM tickets WHERE user_id = 1 AND status = 'ACTIVE' AND ticket_id != ?")) {
+            ps.setInt(1, createdTicketId1);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    promotedOk = rs.getInt("total") > 0;
+                }
+            }
+        }
+        assertTest(promotedOk, "User 1 should be automatically promoted to an ACTIVE ticket upon cancellation");
+
+        // Verify that the waitlist status of User 1 is updated to RESERVED
+        boolean waitlistUpdated = false;
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT status FROM waitlist_entries WHERE user_id = 1 AND concert_id = 1")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    waitlistUpdated = "RESERVED".equals(rs.getString("status"));
+                }
+            }
+        }
+        assertTest(waitlistUpdated, "Waitlist entry status for User 1 must be RESERVED");
+
+        // Verify that User 1 received the notification
+        boolean gotNotification = false;
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) AS total FROM notifications WHERE recipient_id = 1 AND title LIKE '%Λίστα%'")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    gotNotification = rs.getInt("total") > 0;
+                }
+            }
+        }
+        assertTest(gotNotification, "User 1 should have received a notification about their new ticket from the waitlist");
+
+        System.out.println(GREEN
+                + "  [PASS] Smart waitlist pre-authorization, duplicate block, auto-promotion and notification verified successfully." + RESET);
     }
 
     private static void cleanDatabaseForTesting() {

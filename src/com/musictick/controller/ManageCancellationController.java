@@ -75,6 +75,7 @@ public class ManageCancellationController {
                 ps.setInt(1, ticketId);
                 int rows = ps.executeUpdate();
                 System.out.println("ManageCancellationController: Database ticket #" + ticketId + " updated to CANCELLED in DB. Rows updated: " + rows);
+                com.musictick.manager.WaitlistManager.handleTicketCancellation(ticketId);
             } catch (Exception e) {
                 e.printStackTrace();
             }
