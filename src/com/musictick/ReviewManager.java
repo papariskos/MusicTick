@@ -1,5 +1,6 @@
 package com.musictick;
 
+import com.musictick.DBConfig;
 import models.Review;
 
 import java.sql.*;
@@ -8,12 +9,8 @@ import java.util.List;
 
 public class ReviewManager {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/musictick";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
-
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        return DBConfig.getConnection();
     }
 
     public List<Review> getReviewsForConcert(int concertId) throws SQLException {
@@ -53,17 +50,17 @@ public class ReviewManager {
 
     public boolean canUserReview(int userId, int concertId) throws SQLException {
         String sql = "SELECT COUNT(*) AS total " +
-                     "FROM tickets t JOIN concerts c ON t.concert_id = c.concert_id " +
+                     "FROM tickets t " +
                      "WHERE t.user_id = ? AND t.concert_id = ? " +
-                     "AND t.status IN ('ACTIVE', 'UPGRADED') " +
-                     "AND c.status = 'COMPLETED'";
+                     "AND t.status IN ('ACTIVE', 'UPGRADED')";
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setInt(2, concertId);
-            ResultSet rs = ps.executeQuery();
-            return rs.next() && rs.getInt("total") > 0;
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt("total") > 0;
+            }
         }
     }
 

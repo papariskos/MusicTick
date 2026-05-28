@@ -228,3 +228,62 @@ CREATE INDEX idx_tickets_concert ON tickets(concert_id);
 CREATE INDEX idx_notifications_recipient ON notifications(recipient_id);
 CREATE INDEX idx_reviews_concert ON reviews(concert_id);
 CREATE INDEX idx_forum_concert ON forum_posts(concert_id);
+
+-- ─── Venues & Seats Seed Data ─────────────────────────────────────────────────
+
+INSERT INTO venues (venue_id, name, city, address, capacity) VALUES
+(1, 'Athens Arena',       'Athens',       'Pireos 180, Athens',         60),
+(2, 'Metropolis Hall',    'Thessaloniki',  'Egnatia 100, Thessaloniki',  48),
+(3, 'Municipal Theater',  'Patras',        'Georgiou Sq. 1, Patras',     40);
+
+-- Athens Arena (venue_id=1) — 2 VIP rows (A,B) × 5 seats + 4 Regular rows (C–F) × 5 seats = 30
+INSERT INTO seats (venue_id, section_name, row_label, seat_number, seat_type) VALUES
+(1,'VIP','A','1','VIP'),(1,'VIP','A','2','VIP'),(1,'VIP','A','3','VIP'),(1,'VIP','A','4','VIP'),(1,'VIP','A','5','VIP'),
+(1,'VIP','B','1','VIP'),(1,'VIP','B','2','VIP'),(1,'VIP','B','3','VIP'),(1,'VIP','B','4','VIP'),(1,'VIP','B','5','VIP'),
+(1,'REGULAR','C','1','REGULAR'),(1,'REGULAR','C','2','REGULAR'),(1,'REGULAR','C','3','REGULAR'),(1,'REGULAR','C','4','REGULAR'),(1,'REGULAR','C','5','REGULAR'),
+(1,'REGULAR','D','1','REGULAR'),(1,'REGULAR','D','2','REGULAR'),(1,'REGULAR','D','3','REGULAR'),(1,'REGULAR','D','4','REGULAR'),(1,'REGULAR','D','5','REGULAR'),
+(1,'REGULAR','E','1','REGULAR'),(1,'REGULAR','E','2','REGULAR'),(1,'REGULAR','E','3','REGULAR'),(1,'REGULAR','E','4','REGULAR'),(1,'REGULAR','E','5','REGULAR'),
+(1,'REGULAR','F','1','REGULAR'),(1,'REGULAR','F','2','REGULAR'),(1,'REGULAR','F','3','REGULAR'),(1,'REGULAR','F','4','REGULAR'),(1,'REGULAR','F','5','REGULAR');
+
+-- Metropolis Hall (venue_id=2) — 2 VIP rows × 4 + 4 Regular rows × 4 = 24
+INSERT INTO seats (venue_id, section_name, row_label, seat_number, seat_type) VALUES
+(2,'VIP','A','1','VIP'),(2,'VIP','A','2','VIP'),(2,'VIP','A','3','VIP'),(2,'VIP','A','4','VIP'),
+(2,'VIP','B','1','VIP'),(2,'VIP','B','2','VIP'),(2,'VIP','B','3','VIP'),(2,'VIP','B','4','VIP'),
+(2,'REGULAR','C','1','REGULAR'),(2,'REGULAR','C','2','REGULAR'),(2,'REGULAR','C','3','REGULAR'),(2,'REGULAR','C','4','REGULAR'),
+(2,'REGULAR','D','1','REGULAR'),(2,'REGULAR','D','2','REGULAR'),(2,'REGULAR','D','3','REGULAR'),(2,'REGULAR','D','4','REGULAR'),
+(2,'REGULAR','E','1','REGULAR'),(2,'REGULAR','E','2','REGULAR'),(2,'REGULAR','E','3','REGULAR'),(2,'REGULAR','E','4','REGULAR'),
+(2,'REGULAR','F','1','REGULAR'),(2,'REGULAR','F','2','REGULAR'),(2,'REGULAR','F','3','REGULAR'),(2,'REGULAR','F','4','REGULAR');
+
+-- Municipal Theater (venue_id=3) — 1 VIP row × 4 + 4 Regular rows × 4 = 20
+INSERT INTO seats (venue_id, section_name, row_label, seat_number, seat_type) VALUES
+(3,'VIP','A','1','VIP'),(3,'VIP','A','2','VIP'),(3,'VIP','A','3','VIP'),(3,'VIP','A','4','VIP'),
+(3,'REGULAR','B','1','REGULAR'),(3,'REGULAR','B','2','REGULAR'),(3,'REGULAR','B','3','REGULAR'),(3,'REGULAR','B','4','REGULAR'),
+(3,'REGULAR','C','1','REGULAR'),(3,'REGULAR','C','2','REGULAR'),(3,'REGULAR','C','3','REGULAR'),(3,'REGULAR','C','4','REGULAR'),
+(3,'REGULAR','D','1','REGULAR'),(3,'REGULAR','D','2','REGULAR'),(3,'REGULAR','D','3','REGULAR'),(3,'REGULAR','D','4','REGULAR'),
+(3,'REGULAR','E','1','REGULAR'),(3,'REGULAR','E','2','REGULAR'),(3,'REGULAR','E','3','REGULAR'),(3,'REGULAR','E','4','REGULAR');
+
+-- ─── Users Seed Data ─────────────────────────────────────────────────────────
+INSERT INTO users (user_id, first_name, last_name, email, password_hash, role, status) VALUES
+(1, 'John', 'Customer', 'user@musictick.com', '04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb', 'CUSTOMER', 'ACTIVE'),
+(2, 'Bob', 'Organizer', 'organizer@musictick.com', '0bf7ab78559a04941f158a11b00afaf6a8b22f90cff387edbc8e1d7a9b99cca0', 'ORGANIZER', 'ACTIVE'),
+(3, 'Alice', 'Admin', 'admin@musictick.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'ADMIN', 'ACTIVE');
+
+-- ─── Concerts Seed Data ──────────────────────────────────────────────────────
+INSERT INTO concerts (concert_id, organizer_id, venue_id, title, description, concert_date, status, average_rating) VALUES
+(1, 2, 1, 'Athens Rock Fest 2026', 'Big rock night at Athens Arena', '2026-06-20 20:00:00', 'APPROVED', 4.80),
+(2, 2, 2, 'Metropolis Electro Wave', 'Synthwave vibe at Metropolis Hall', '2026-07-15 21:30:00', 'APPROVED', 4.50),
+(3, 2, 3, 'Patras Classical Gala', 'Beautiful symphony gala', '2026-08-05 19:00:00', 'APPROVED', 4.90);
+
+-- ─── Ticket Types Seed Data ──────────────────────────────────────────────────
+INSERT INTO ticket_types (ticket_type_id, concert_id, name, price, quantity) VALUES
+(1, 1, 'REGULAR', 35.00, 20),
+(2, 1, 'VIP', 75.00, 10),
+(3, 2, 'REGULAR', 35.00, 16),
+(4, 2, 'VIP', 75.00, 8),
+(5, 3, 'REGULAR', 35.00, 16),
+(6, 3, 'VIP', 75.00, 4);
+
+-- ─── Forum Posts Seed Data ───────────────────────────────────────────────────
+INSERT INTO forum_posts (post_id, concert_id, user_id, title, content) VALUES
+(201, 1, 1, 'Rock Fest Question', 'Are cameras allowed at the Athens Rock Fest?'),
+(202, 1, 2, 'Re: Rock Fest Question', 'Yes, small digital cameras are allowed, but no professional gear.');

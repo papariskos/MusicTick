@@ -14,7 +14,12 @@ if [ $? -eq 0 ]; then
     cp src/*.fxml out/
     
     echo "Running MusicTick..."
-    java --module-path libs/javafx-lib --add-modules javafx.controls,javafx.fxml -cp out:libs/mysql-connector-java.jar com.musictick.Main
+    java --module-path libs/javafx-lib \
+         --add-modules javafx.controls,javafx.fxml \
+         --enable-native-access=javafx.graphics \
+         --sun-misc-unsafe-memory-access=allow \
+         -cp out:libs/mysql-connector-java.jar \
+         com.musictick.Main
 else
     echo "Compilation failed."
     exit 1

@@ -1,5 +1,6 @@
 package com.musictick.dao;
 
+import com.musictick.DBConfig;
 import models.Concert;
 import models.Seat;
 import models.enums.ConcertStatus;
@@ -9,12 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConcertDAO {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/musictick?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        return DBConfig.getConnection();
     }
 
     public List<Concert> searchConcerts(String terms) throws SQLException {

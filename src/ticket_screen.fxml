@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="25.0" style="-fx-background-color: #0b0f19;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://scene.com/fxml/1" fx:controller="com.musictick.controller.TicketConfirmationController">
+   <children>
+      <VBox alignment="CENTER" maxWidth="500.0" spacing="25.0" style="-fx-background-color: #151d30; -fx-background-radius: 15; -fx-border-color: #2ecc71; -fx-border-width: 1.5; -fx-border-radius: 15; -fx-padding: 35; -fx-effect: dropshadow(three-pass-box, rgba(46,204,113,0.4), 20, 0.4, 0, 0);">
+         <children>
+            <Label text="🎉" textFill="#2ecc71">
+               <font>
+                  <Font size="64.0" />
+               </font>
+               <style>
+                  -fx-effect: dropshadow(three-pass-box, rgba(46,204,113,0.8), 15, 0.5, 0, 0);
+               </style>
+            </Label>
+            <VBox alignment="CENTER" spacing="8.0">
+               <children>
+                  <Label text="Η Κράτηση Ολοκληρώθηκε!" textFill="#2ecc71">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(46,204,113,0.6), 10, 0.4, 0, 0);
+                     </style>
+                  </Label>
+                  <Label text="Το εισιτήριο εκδόθηκε επιτυχώς!" textFill="#00f3ff">
+                     <font>
+                        <Font name="System Italic" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: #0b0f19; -fx-padding: 20; -fx-background-radius: 10; -fx-border-color: #00f3ff; -fx-border-width: 1; -fx-border-radius: 10;">
+               <children>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Συναυλία:" textFill="#ff007f" />
+                        <Label fx:id="concertLabel" text="Concert Name" textFill="white" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Θέση:" textFill="#ff007f" />
+                        <Label fx:id="seatLabel" text="Seat details" textFill="white" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Συνολικό Ποσό:" textFill="#ff007f" />
+                        <Label fx:id="priceLabel" text="0.00 €" textFill="#2ecc71">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Κωδικός Παραγγελίας:" textFill="#ff007f" />
+                        <Label fx:id="orderIdLabel" text="#0" textFill="white" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Label text="📧 Ένα email επιβεβαίωσης με το QR Code έχει σταλεί στη διεύθυνσή σας." textAlignment="CENTER" textFill="#00f3ff" wrapText="true">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#goToHome" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Επιστροφή στην Αρχική 🏠">
+               <style>
+                  -fx-effect: dropshadow(three-pass-box, rgba(46,204,113,0.6), 10, 0.4, 0, 0);
+               </style>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+   </padding>
+</VBox>

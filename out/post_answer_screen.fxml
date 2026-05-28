@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+
+<VBox alignment="CENTER" spacing="15.0" style="-fx-background-color: #0b0f19;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://scene.com/fxml/1" fx:controller="com.musictick.controller.PostAnswerController">
+    <padding><Insets bottom="30.0" left="40.0" right="40.0" top="30.0" /></padding>
+    <children>
+        <VBox alignment="CENTER" maxWidth="650.0" spacing="15.0" style="-fx-background-color: #151d30; -fx-background-radius: 15; -fx-border-color: #00f3ff; -fx-border-width: 1.5; -fx-border-radius: 15; -fx-padding: 30;">
+            <children>
+                <Label text="📨 Απάντηση / Αναφορά Post" textFill="#00f3ff">
+                    <font><Font name="System Bold" size="22.0" /></font>
+                </Label>
+
+                <!-- Post info -->
+                <VBox spacing="6.0" style="-fx-background-color: #0b0f19; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #9b59b6; -fx-border-radius: 8; -fx-border-width: 1;">
+                    <children>
+                        <HBox spacing="8.0">
+                            <children>
+                                <Label text="Τίτλος:" textFill="#ff007f" style="-fx-font-weight: bold;" />
+                                <Label fx:id="postTitleLabel" text="" textFill="white" wrapText="true" />
+                            </children>
+                        </HBox>
+                        <HBox spacing="8.0">
+                            <children>
+                                <Label text="Κείμενο:" textFill="#ff007f" style="-fx-font-weight: bold;" />
+                                <Label fx:id="postContentLabel" text="" textFill="white" wrapText="true" />
+                            </children>
+                        </HBox>
+                        <Label fx:id="postStatusLabel" text="" textFill="#f39c12" />
+                    </children>
+                </VBox>
+
+                <Separator style="-fx-background-color: #9b59b6;" />
+
+                <!-- Reply section -->
+                <Label text="💬 Απάντησή σας:" textFill="#2ecc71" style="-fx-font-weight: bold;" />
+                <TextArea fx:id="replyArea" prefHeight="100.0" wrapText="true" promptText="Γράψτε την απάντησή σας..."
+                          style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-border-color: #2ecc71; -fx-border-radius: 5;" />
+                <Button mnemonicParsing="false" onAction="#handleReply" prefHeight="38.0" prefWidth="250.0"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: #151d30; -fx-font-weight: bold; -fx-background-radius: 5;" text="Αποστολή Απάντησης">
+                    <font><Font size="13.0" /></font>
+                </Button>
+
+                <Separator style="-fx-background-color: #9b59b6;" />
+
+                <!-- Report section -->
+                <Label text="🚩 Αναφορά Post:" textFill="#e74c3c" style="-fx-font-weight: bold;" />
+                <TextArea fx:id="reportReasonArea" prefHeight="80.0" wrapText="true" promptText="Λόγος αναφοράς..."
+                          style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-border-color: #e74c3c; -fx-border-radius: 5;" />
+                <Button mnemonicParsing="false" onAction="#handleReport" prefHeight="38.0" prefWidth="250.0"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Υποβολή Αναφοράς">
+                    <font><Font size="13.0" /></font>
+                </Button>
+
+                <Button mnemonicParsing="false" onAction="#goBack" prefHeight="38.0" prefWidth="200.0"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ff007f; -fx-border-color: #ff007f; -fx-border-radius: 5; -fx-border-width: 1.5; -fx-font-weight: bold;" text="⬅️ ΠΙΣΩ" />
+            </children>
+        </VBox>
+    </children>
+</VBox>

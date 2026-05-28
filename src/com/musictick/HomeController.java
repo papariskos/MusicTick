@@ -43,17 +43,17 @@ public class HomeController {
 
     @FXML
     private void handleTickets() {
-        System.out.println("Opening My Tickets...");
+        openPage("/my_tickets.fxml", "MusicTick - My Tickets", 800, 550);
     }
 
     @FXML
     private void handleForum() {
-        System.out.println("Opening Forum...");
+        openPage("/forum_screen.fxml", "MusicTick - Forum", 900, 650);
     }
 
     @FXML
     private void handleReport() {
-        System.out.println("Opening Report Problem...");
+        openPage("/report_problem_screen.fxml", "MusicTick - Report Problem", 900, 600);
     }
 
     @FXML
@@ -109,6 +109,16 @@ public class HomeController {
     @FXML
     private void handleReviews() {
         openPage("/review_display.fxml", "MusicTick - Reviews", 800, 550);
+    }
+
+    @FXML
+    private void handleCreateConcert() {
+        openPage("/create_concert.fxml", "MusicTick - Create Concert", 800, 600);
+    }
+
+    @FXML
+    private void handleReviewProblems() {
+        openPage("/review_problems.fxml", "MusicTick - Review Problems", 800, 600);
     }
 
     @FXML

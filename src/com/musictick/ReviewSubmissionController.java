@@ -16,8 +16,8 @@ public class ReviewSubmissionController {
 
     private final ReviewManager reviewManager = new ReviewManager();
 
-    // Προσωρινό μέχρι να συνδεθεί με login/session.
-    private final int currentUserId = 1;
+    // Dynamic user ID from current session
+    private final int currentUserId = Session.getCurrentUserId();
 
     @FXML
     public void initialize() {

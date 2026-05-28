@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #0b0f19;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://scene.com/fxml/1" fx:controller="com.musictick.controller.ReservationScreenController">
+    <children>
+        <VBox alignment="CENTER" maxWidth="550.0" spacing="20.0" style="-fx-background-color: #151d30; -fx-background-radius: 15; -fx-border-color: #ffaa00; -fx-border-width: 1.5; -fx-border-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(255,170,0,0.4), 20, 0.4, 0, 0);">
+            <children>
+                <Label text="Επιλογή Εισιτηρίου για Ακύρωση" textFill="#ffaa00">
+                    <font><Font name="System Bold" size="22.0" /></font>
+                </Label>
+                <Label text="Επιλέξτε το εισιτήριο που θέλετε να ακυρώσετε:" textFill="white" />
+                <ComboBox fx:id="ticketComboBox" prefWidth="500.0"
+                          style="-fx-background-color: #0b0f19; -fx-text-fill: white; -fx-border-color: #ffaa00; -fx-border-radius: 5;" />
+                <Label fx:id="statusLabel" textFill="#e74c3c" wrapText="true" />
+                <Button mnemonicParsing="false" onAction="#submitReservationData" prefHeight="40.0" prefWidth="260.0"
+                        style="-fx-background-color: #ffaa00; -fx-text-fill: #151d30; -fx-font-weight: bold; -fx-background-radius: 5;" text="Συνέχεια Ακύρωσης →" />
+                <Button mnemonicParsing="false" onAction="#goBack" prefHeight="40.0" prefWidth="260.0"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5;" text="Πίσω" />
+            </children>
+        </VBox>
+    </children>
+</VBox>

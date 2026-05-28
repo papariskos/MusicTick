@@ -28,6 +28,8 @@ public class TicketConfirmationController {
         if (orderIdLabel != null) {
             orderIdLabel.setText("#" + BookingController.confirmedOrderId);
         }
+
+
     }
 
     @FXML

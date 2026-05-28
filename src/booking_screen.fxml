@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #0b0f19;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://scene.com/fxml/1" fx:controller="com.musictick.controller.ValidatePaymentDetailsController">
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+   <children>
+      <VBox alignment="CENTER" maxWidth="500.0" spacing="20.0" style="-fx-background-color: #151d30; -fx-background-radius: 15; -fx-border-color: #00f3ff; -fx-border-width: 1.5; -fx-border-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.4), 20, 0.4, 0, 0);">
+         <children>
+            <VBox alignment="CENTER" spacing="5.0">
+               <children>
+                  <Label text="Ολοκλήρωση Αγοράς 💳" textFill="#ff007f">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(255,0,127,0.7), 10, 0.4, 0, 0);
+                     </style>
+                  </Label>
+                  <Label fx:id="timerLabel" text="Χρόνος για ολοκλήρωση: 30s" textFill="#ff4757">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(255,71,87,0.6), 8, 0.4, 0, 0);
+                     </style>
+                  </Label>
+               </children>
+            </VBox>
+            
+            <VBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: #0b0f19; -fx-padding: 20; -fx-background-radius: 10; -fx-border-color: #00f3ff; -fx-border-width: 1; -fx-border-radius: 10;">
+               <children>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Συναυλία:" textFill="#ff007f" />
+                        <Label fx:id="paymentConcertLabel" text="Concert Name" textFill="white" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Θέση:" textFill="#ff007f" />
+                        <Label fx:id="paymentSeatLabel" text="Seat details" textFill="white" />
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Τιμή Εισιτηρίου:" textFill="#ff007f" />
+                        <Label fx:id="paymentPriceLabel" text="0.00 €" textFill="#2ecc71">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <style>
+                              -fx-effect: dropshadow(three-pass-box, rgba(46,204,113,0.5), 8, 0.4, 0, 0);
+                           </style>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <VBox spacing="5.0" style="-fx-padding: 10 0 0 0;">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Στοιχεία Κάρτας (Simulated):" textFill="#00f3ff" />
+                        <TextField fx:id="cardDetailsField" prefHeight="35.0" promptText="Εισάγετε αριθμό κάρτας..." style="-fx-background-color: #151d30; -fx-text-fill: white; -fx-prompt-text-fill: #5c6b84; -fx-border-color: #00f3ff; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                        <Label text="*Πληκτρολογήστε 'FAIL' ή 'ERROR' για να προσομοιώσετε σφάλμα Circuit Breaker." textFill="#7f8c8d">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            
+            <Label fx:id="paymentStatusLabel" textFill="#ff4757" wrapText="true">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="40.0" prefWidth="140.0" style="-fx-background-color: transparent; -fx-text-fill: #ff007f; -fx-border-color: #ff007f; -fx-border-width: 1.5; -fx-border-radius: 5; -fx-background-radius: 5; -fx-font-weight: bold;" text="⬅️ ΑΚΥΡΩΣΗ" />
+                  <Button mnemonicParsing="false" onAction="#handleSubmitPayment" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00f3ff; -fx-text-fill: #0b0f19; -fx-font-weight: bold; -fx-background-radius: 5;" text="ΠΛΗΡΩΜΗ &amp; ΕΚΔΟΣΗ 💳">
+                     <style>
+                        -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.6), 10, 0.4, 0, 0);
+                     </style>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>

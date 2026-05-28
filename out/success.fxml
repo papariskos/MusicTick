@@ -18,7 +18,7 @@
       </Label>
       <VBox alignment="CENTER" spacing="8.0">
          <children>
-            <Label text="Επιτυχής Εγγραφή!" textFill="#ff007f">
+            <Label fx:id="titleLabel" text="Επιτυχής Εγγραφή!" textFill="#ff007f">
                <font>
                   <Font name="System Bold" size="26.0" />
                </font>
@@ -26,14 +26,14 @@
                   -fx-effect: dropshadow(three-pass-box, rgba(255,0,127,0.7), 10, 0.4, 0, 0);
                </style>
             </Label>
-            <Label alignment="CENTER" maxWidth="500.0" text="Ο λογαριασμός σας δημιουργήθηκε επιτυχώς! Μπορείτε πλέον να συνδεθείτε στην εφαρμογή." textAlignment="CENTER" textFill="#7f8c8d" wrapText="true">
+            <Label fx:id="descLabel" alignment="CENTER" maxWidth="500.0" text="Ο λογαριασμός σας δημιουργήθηκε επιτυχώς! Μπορείτε πλέον να συνδεθείτε στην εφαρμογή." textAlignment="CENTER" textFill="#7f8c8d" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
          </children>
       </VBox>
-      <Button mnemonicParsing="false" onAction="#goToLogin" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #00f3ff; -fx-text-fill: #0b0f19; -fx-font-weight: bold; -fx-background-radius: 5;" text="ΣΥΝΔΕΣΗ (LOGIN) 🔑">
+      <Button fx:id="actionButton" mnemonicParsing="false" onAction="#goToLogin" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #00f3ff; -fx-text-fill: #0b0f19; -fx-font-weight: bold; -fx-background-radius: 5;" text="ΣΥΝΔΕΣΗ (LOGIN) 🔑">
          <style>
             -fx-effect: dropshadow(three-pass-box, rgba(0,243,255,0.6), 10, 0.4, 0, 0);
          </style>

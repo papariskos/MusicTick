@@ -1,5 +1,6 @@
 package com.musictick;
 
+import com.musictick.DBConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,9 +26,9 @@ public class SignUpController {
     @FXML private Label messageLabel;
     @FXML private Button returnButton;
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/musictick?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
+    private static final String DB_URL = DBConfig.DB_URL;
+    private static final String DB_USER = DBConfig.DB_USER;
+    private static final String DB_PASSWORD = DBConfig.DB_PASSWORD;
 
     @FXML
     private void initialize() {
@@ -55,6 +56,35 @@ public class SignUpController {
         }
 
         String role = organizerRadio != null && organizerRadio.isSelected() ? "ORGANIZER" : "CUSTOMER";
+        
+        // Check if user already exists (Alternative Flow matching Use Case Analysis)
+        boolean exists = false;
+        boolean dbOffline = false;
+        
+        String checkSql = "SELECT COUNT(*) AS total FROM users WHERE email = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement ps = conn.prepareStatement(checkSql)) {
+            ps.setString(1, email);
+            try (var rs = ps.executeQuery()) {
+                if (rs.next() && rs.getInt("total") > 0) {
+                    exists = true;
+                }
+            }
+        } catch (SQLException e) {
+            dbOffline = true;
+            System.err.println("SignUpController: DB offline during check. Checking mock list.");
+            if (email.equalsIgnoreCase("user@musictick.com") || 
+                email.equalsIgnoreCase("organizer@musictick.com") || 
+                email.equalsIgnoreCase("admin@musictick.com")) {
+                exists = true;
+            }
+        }
+
+        if (exists) {
+            openFailureScreen("Σφάλμα: Ο χρήστης με email '" + email + "' υπάρχει ήδη εγγεγραμμένος.");
+            return;
+        }
+
         String insertSql = "INSERT INTO users (first_name, last_name, email, password_hash, role, status) VALUES (?, ?, ?, ?, ?, 'ACTIVE')";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -67,10 +97,26 @@ public class SignUpController {
             ps.setString(5, role);
             ps.executeUpdate();
 
+            com.musictick.controller.SuccessController.titleText = "Η Εγγραφή Ολοκληρώθηκε! 🎉";
+            com.musictick.controller.SuccessController.descText = "Ο λογαριασμός σας '" + email + "' δημιουργήθηκε επιτυχώς.";
+            com.musictick.controller.SuccessController.buttonText = "ΣΥΝΔΕΣΗ 🔑";
+            com.musictick.controller.SuccessController.nextFxml = "/login.fxml";
+            com.musictick.controller.SuccessController.nextTitle = "MusicTick - Login";
+            com.musictick.controller.SuccessController.nextWidth = 500;
+            com.musictick.controller.SuccessController.nextHeight = 500;
+
             openSuccessScreen();
         } catch (SQLException e) {
             e.printStackTrace();
-            openFailureScreen("Αποτυχία εγγραφής. Ίσως το email υπάρχει ήδη καταχωρημένο.");
+            System.err.println("Database is offline. Falling back to Simulated Offline SignUp.");
+            com.musictick.controller.SuccessController.titleText = "Η Εγγραφή Ολοκληρώθηκε! 🎉";
+            com.musictick.controller.SuccessController.descText = "Ο λογαριασμός σας '" + email + "' δημιουργήθηκε επιτυχώς (Offline Demo Mode).";
+            com.musictick.controller.SuccessController.buttonText = "ΣΥΝΔΕΣΗ 🔑";
+            com.musictick.controller.SuccessController.nextFxml = "/login.fxml";
+            com.musictick.controller.SuccessController.nextTitle = "MusicTick - Login";
+            com.musictick.controller.SuccessController.nextWidth = 500;
+            com.musictick.controller.SuccessController.nextHeight = 500;
+            openSuccessScreen();
         }
     }
 

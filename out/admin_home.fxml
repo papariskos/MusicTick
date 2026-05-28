@@ -83,11 +83,12 @@
             <Separator style="-fx-opacity: 0.15; -fx-background-color: #00f3ff;" />
             
             <HBox spacing="20.0" alignment="CENTER">
-               <children>
-                  <Button onAction="#handleNotifications" prefHeight="38.0" prefWidth="180.0" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" text="Notifications 🔔" />
-                  <Button onAction="#handleLogout" prefHeight="38.0" prefWidth="180.0" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" text="Logout ⬅️" />
-               </children>
-            </HBox>
+                <children>
+                   <Button onAction="#handleNotifications" prefHeight="38.0" prefWidth="180.0" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" text="Notifications 🔔" />
+                   <Button onAction="#handleManageConcerts" prefHeight="38.0" prefWidth="180.0" style="-fx-background-color: #00f3ff; -fx-text-fill: #0b0f19; -fx-background-radius: 5; -fx-font-weight: bold;" text="Ενεργές Συναυλίες 🎸" />
+                   <Button onAction="#handleLogout" prefHeight="38.0" prefWidth="180.0" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" text="Logout ⬅️" />
+                </children>
+             </HBox>
          </children>
       </VBox>
    </children>

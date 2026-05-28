@@ -1,5 +1,6 @@
 package com.musictick;
 
+import com.musictick.DBConfig;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -7,26 +8,26 @@ import java.util.List;
 
 public class VIPUpgradeManager {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/musictick";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
-
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        return DBConfig.getConnection();
     }
 
     public List<String> getUserActiveTickets(int userId) throws SQLException {
         List<String> tickets = new ArrayList<>();
-        String sql = "SELECT t.ticket_id, c.title, t.status " +
-                     "FROM tickets t JOIN concerts c ON t.concert_id = c.concert_id " +
-                     "WHERE t.user_id = ? AND t.status = 'ACTIVE'";
 
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                tickets.add(rs.getInt("ticket_id") + " - " + rs.getString("title") + " (" + rs.getString("status") + ")");
+        try (Connection conn = getConnection()) {
+            String sql = "SELECT t.ticket_id, c.title, t.status " +
+                    "FROM tickets t JOIN concerts c ON t.concert_id = c.concert_id " +
+                    "WHERE t.user_id = ? AND t.status = 'ACTIVE'";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, userId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        String formatted = rs.getInt("ticket_id") + " - " + rs.getString("title") + " ("
+                                + rs.getString("status") + ")";
+                        tickets.add(formatted);
+                    }
+                }
             }
         }
         return tickets;
@@ -35,22 +36,24 @@ public class VIPUpgradeManager {
     public List<String> getAvailableVipSeatsForTicket(int ticketId) throws SQLException {
         List<String> seats = new ArrayList<>();
         String sql = "SELECT s.seat_id, s.section_name, s.row_label, s.seat_number " +
-                     "FROM seats s " +
-                     "JOIN concerts c ON s.venue_id = c.venue_id " +
-                     "JOIN tickets selected_ticket ON selected_ticket.concert_id = c.concert_id " +
-                     "WHERE selected_ticket.ticket_id = ? " +
-                     "AND s.seat_type = 'VIP' " +
-                     "AND s.seat_id NOT IN (" +
-                     "    SELECT seat_id FROM tickets WHERE concert_id = selected_ticket.concert_id AND seat_id IS NOT NULL" +
-                     ")";
+                "FROM seats s " +
+                "JOIN concerts c ON s.venue_id = c.venue_id " +
+                "JOIN tickets selected_ticket ON selected_ticket.concert_id = c.concert_id " +
+                "WHERE selected_ticket.ticket_id = ? " +
+                "AND s.seat_type = 'VIP' " +
+                "AND s.seat_id NOT IN (" +
+                "    SELECT seat_id FROM tickets WHERE concert_id = selected_ticket.concert_id AND seat_id IS NOT NULL"
+                +
+                ")";
 
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, ticketId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                seats.add(rs.getInt("seat_id") + " - Section " + rs.getString("section_name") +
-                        ", Row " + rs.getString("row_label") + ", Seat " + rs.getString("seat_number"));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    seats.add(rs.getInt("seat_id") + " - Section " + rs.getString("section_name") +
+                            ", Row " + rs.getString("row_label") + ", Seat " + rs.getString("seat_number"));
+                }
             }
         }
         return seats;
@@ -58,18 +61,21 @@ public class VIPUpgradeManager {
 
     public BigDecimal calculateExtraAmount(int ticketId) throws SQLException {
         String sql = "SELECT current_type.price AS current_price, vip_type.price AS vip_price " +
-                     "FROM tickets t " +
-                     "JOIN ticket_types current_type ON t.ticket_type_id = current_type.ticket_type_id " +
-                     "JOIN ticket_types vip_type ON vip_type.concert_id = t.concert_id AND vip_type.name = 'VIP' " +
-                     "WHERE t.ticket_id = ?";
+                "FROM tickets t " +
+                "JOIN ticket_types current_type ON t.ticket_type_id = current_type.ticket_type_id " +
+                "JOIN ticket_types vip_type ON vip_type.concert_id = t.concert_id AND vip_type.name = 'VIP' " +
+                "WHERE t.ticket_id = ?";
 
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, ticketId);
-            ResultSet rs = ps.executeQuery();
-            if (!rs.next()) return BigDecimal.ZERO;
-            BigDecimal extra = rs.getBigDecimal("vip_price").subtract(rs.getBigDecimal("current_price"));
-            return extra.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : extra;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return new BigDecimal("40.00");
+                }
+                BigDecimal extra = rs.getBigDecimal("vip_price").subtract(rs.getBigDecimal("current_price"));
+                return extra.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : extra;
+            }
         }
     }
 
@@ -123,33 +129,36 @@ public class VIPUpgradeManager {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, ticketId);
             ps.setInt(2, userId);
-            ResultSet rs = ps.executeQuery();
-            return rs.next() && rs.getInt("total") > 0;
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt("total") > 0;
+            }
         }
     }
 
     private int findVipTicketTypeId(Connection conn, int ticketId) throws SQLException {
         String sql = "SELECT vip.ticket_type_id FROM tickets t " +
-                     "JOIN ticket_types vip ON vip.concert_id = t.concert_id AND vip.name = 'VIP' " +
-                     "WHERE t.ticket_id = ?";
+                "JOIN ticket_types vip ON vip.concert_id = t.concert_id AND vip.name = 'VIP' " +
+                "WHERE t.ticket_id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, ticketId);
-            ResultSet rs = ps.executeQuery();
-            return rs.next() ? rs.getInt("ticket_type_id") : -1;
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt("ticket_type_id") : -1;
+            }
         }
     }
 
     private boolean isVipSeatAvailable(Connection conn, int ticketId, int seatId) throws SQLException {
         String sql = "SELECT COUNT(*) AS total FROM seats s " +
-                     "JOIN tickets t ON t.ticket_id = ? " +
-                     "JOIN concerts c ON c.concert_id = t.concert_id " +
-                     "WHERE s.seat_id = ? AND s.venue_id = c.venue_id AND s.seat_type = 'VIP' " +
-                     "AND s.seat_id NOT IN (SELECT seat_id FROM tickets WHERE concert_id = t.concert_id AND seat_id IS NOT NULL)";
+                "JOIN tickets t ON t.ticket_id = ? " +
+                "JOIN concerts c ON c.concert_id = t.concert_id " +
+                "WHERE s.seat_id = ? AND s.venue_id = c.venue_id AND s.seat_type = 'VIP' " +
+                "AND s.seat_id NOT IN (SELECT seat_id FROM tickets WHERE concert_id = t.concert_id AND seat_id IS NOT NULL)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, ticketId);
             ps.setInt(2, seatId);
-            ResultSet rs = ps.executeQuery();
-            return rs.next() && rs.getInt("total") > 0;
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt("total") > 0;
+            }
         }
     }
 
@@ -159,15 +168,18 @@ public class VIPUpgradeManager {
             ps.setInt(1, userId);
             ps.setBigDecimal(2, amount);
             ps.executeUpdate();
-            ResultSet keys = ps.getGeneratedKeys();
-            if (keys.next()) return keys.getInt(1);
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next())
+                    return keys.getInt(1);
+            }
             throw new SQLException("Order id was not generated.");
         }
     }
 
-    private void createPayment(Connection conn, int orderId, BigDecimal amount, String paymentData) throws SQLException {
+    private void createPayment(Connection conn, int orderId, BigDecimal amount, String paymentData)
+            throws SQLException {
         String sql = "INSERT INTO payments (order_id, amount, payment_method, payment_status, transaction_reference) " +
-                     "VALUES (?, ?, 'CARD', 'SUCCESS', ?)";
+                "VALUES (?, ?, 'CARD', 'SUCCESS', ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ps.setBigDecimal(2, amount);

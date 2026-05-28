@@ -2,6 +2,7 @@ package com.musictick;
 
 import com.musictick.AuthUtils;
 import com.musictick.Session;
+import com.musictick.DBConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,9 +27,6 @@ public class LoginController {
     @FXML
     private Label errorLabel;
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/musictick?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
 
     @FXML
     private void handleLogin() {
@@ -41,16 +39,28 @@ public class LoginController {
         }
 
         try {
-            if (email.equals("admin") && password.equals("admin")) {
-                Session.setCurrentUserId(0);
+            if ((email.equalsIgnoreCase("admin") || email.equalsIgnoreCase("admin@musictick.com")) && password.equals("admin")) {
+                Session.setCurrentUserId(3);
                 Session.setCurrentUserRole("ADMIN");
+                openHomePage();
+                return;
+            }
+            if ((email.equalsIgnoreCase("user") || email.equalsIgnoreCase("user@musictick.com")) && password.equals("user")) {
+                Session.setCurrentUserId(1);
+                Session.setCurrentUserRole("CUSTOMER");
+                openHomePage();
+                return;
+            }
+            if ((email.equalsIgnoreCase("organizer") || email.equalsIgnoreCase("organizer@musictick.com")) && password.equals("organizer")) {
+                Session.setCurrentUserId(2);
+                Session.setCurrentUserRole("ORGANIZER");
                 openHomePage();
                 return;
             }
 
             String sql = "SELECT user_id, password_hash, role FROM users WHERE email = ?";
 
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            try (Connection conn = DBConfig.getConnection();
                     PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, email);
                 ResultSet rs = ps.executeQuery();

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #0b0f19;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://scene.com/fxml/1" fx:controller="com.musictick.controller.ForumController">
+    <padding><Insets bottom="30.0" left="30.0" right="30.0" top="30.0" /></padding>
+    <children>
+        <VBox alignment="CENTER" maxWidth="750.0" spacing="18.0" style="-fx-background-color: #151d30; -fx-background-radius: 15; -fx-border-color: #9b59b6; -fx-border-width: 1.5; -fx-border-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(155,89,182,0.4), 20, 0.4, 0, 0);">
+            <children>
+                <Label text="💬 Forum Συναυλιών" textFill="#9b59b6">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                    <style>-fx-effect: dropshadow(three-pass-box, rgba(155,89,182,0.7), 10, 0.4, 0, 0);</style>
+                </Label>
+                <Label fx:id="forumTitleLabel" text="Forum Συναυλίας" textFill="#00f3ff">
+                    <font><Font name="System Italic" size="14.0" /></font>
+                </Label>
+
+                <ListView fx:id="postsListView" prefHeight="250.0" prefWidth="690.0"
+                          style="-fx-background-color: #0b0f19; -fx-border-color: #9b59b6; -fx-border-radius: 5; -fx-background-radius: 5;" />
+
+                <Label fx:id="statusLabel" textFill="#e74c3c" wrapText="true">
+                    <font><Font size="13.0" /></font>
+                </Label>
+
+                <HBox alignment="CENTER" spacing="15.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#handleNewPost" prefHeight="40.0" prefWidth="200.0"
+                                style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="✍️ Νέα Ανάρτηση">
+                            <font><Font size="13.0" /></font>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleSelectPost" prefHeight="40.0" prefWidth="200.0"
+                                style="-fx-background-color: #00f3ff; -fx-text-fill: #151d30; -fx-font-weight: bold; -fx-background-radius: 5;" text="💬 Απάντηση / Αναφορά">
+                            <font><Font size="13.0" /></font>
+                        </Button>
+                        <Button fx:id="adminManageButton" mnemonicParsing="false" onAction="#handleAdminManage" prefHeight="40.0" prefWidth="200.0"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="🛡️ Διαχείριση (Admin)" visible="false">
+                            <font><Font size="13.0" /></font>
+                        </Button>
+                    </children>
+                </HBox>
+
+                <Button mnemonicParsing="false" onAction="#goBack" prefHeight="38.0" prefWidth="200.0"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ff007f; -fx-border-color: #ff007f; -fx-border-radius: 5; -fx-border-width: 1.5; -fx-background-radius: 5; -fx-font-weight: bold;" text="⬅️ ΕΠΙΣΤΡΟΦΗ">
+                    <font><Font size="13.0" /></font>
+                </Button>
+            </children>
+        </VBox>
+    </children>
+</VBox>
