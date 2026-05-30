@@ -28,6 +28,17 @@ public class ReservationScreenController {
         List<String> tickets = loadTicketsFromDB();
         if (ticketComboBox != null) {
             ticketComboBox.setItems(FXCollections.observableArrayList(tickets));
+            
+            int preselectedId = com.musictick.Session.getSelectedTicketIdForCancellation();
+            if (preselectedId != -1) {
+                for (String t : tickets) {
+                    if (t.startsWith("Ticket #" + preselectedId + " ")) {
+                        ticketComboBox.setValue(t);
+                        selectedTicketLine = t;
+                        break;
+                    }
+                }
+            }
         }
     }
 

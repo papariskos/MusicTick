@@ -59,19 +59,26 @@ MusicTick/
 
 ### Βήμα 1: Εκκίνηση του MySQL Server
 
-- **macOS (μέσω Homebrew):**
+- ** macOS:**
+  - Μέσω Homebrew:
+    ```bash
+    brew services start mysql
+    ```
+  - Μέσω Installer: Εκκινήστε τον MySQL Server από τα System Settings (Προτιμήσεις Συστήματος).
+- **❖ Windows:**
+  - Εκκινήστε την υπηρεσία MySQL από τα Windows Services (Υπηρεσίες -> `MySQL80` -> Έναρξη) ή μέσω Command Prompt ως Administrator:
+    ```cmd
+    net start mysql
+    ```
+- **🐧 Linux:**
   ```bash
-  brew services start mysql
+  sudo systemctl start mysql
   ```
-- **macOS (Installer):**
-  Εκκινήστε τον MySQL Server από τα System Settings (Προτιμήσεις Συστήματος).
-- **Windows / Linux:**
-  Βεβαιωθείτε ότι ο MySQL Server είναι ενεργοποιημένος και τρέχει.
 
 ### Βήμα 2: Παραμετροποίηση Σύνδεσης (Προαιρετικό)
 
 Όλα τα στοιχεία σύνδεσης της εφαρμογής είναι κεντρικοποιημένα στο αρχείο:
-[DBConfig.java](file:///Users/alex/Desktop/CEID/MusicTick/src/com/musictick/DBConfig.java)
+[DBConfig.java](src/com/musictick/DBConfig.java)
 
 Αν ο τοπικός σας MySQL root χρήστης απαιτεί κωδικό, ανοίξτε το αρχείο και τροποποιήστε τις σταθερές:
 ```java
@@ -83,28 +90,43 @@ public static final String DB_PASSWORD = "ο_κωδικος_σας";
 
 Ανοίξτε το τερματικό και εκτελέστε το SQL Script για να δημιουργηθούν αυτόματα η βάση δεδομένων `musictick`, οι πίνακες, τα indexes και τα seed δεδομένα:
 
-```bash
-cd /Users/alex/Desktop/CEID/MusicTick
-mysql -u root -p < src/database/musictick.sql
-```
+- **macOS / Linux:**
+  ```bash
+  cd MusicTick
+  mysql -u root -p < src/database/musictick.sql
+  ```
+- **Windows:**
+  ```cmd
+  cd MusicTick
+  mysql -u root -p < src\database\musictick.sql
+  ```
+
 *(Αν δεν έχετε κωδικό root, πατήστε απλώς **Enter**).*
 
 ---
 
 ## 4. Εκτέλεση της Εφαρμογής
 
-Μπορείτε να εκτελέσετε την εφαρμογή εύκολα μέσω του script `run.sh` που αναλαμβάνει αυτόματα τη μεταγλώττιση, την αντιγραφή των UI πόρων και την εκτέλεση:
+Μπορείτε να εκτελέσετε την εφαρμογή εύκολα χρησιμοποιώντας τα έτοιμα σενάρια (scripts) που αναλαμβάνουν αυτόματα τη μεταγλώττιση, την αντιγραφή των UI πόρων και την εκτέλεση:
 
+###  macOS / Linux
 ```bash
-cd /Users/alex/Desktop/CEID/MusicTick
+cd MusicTick
 chmod +x run.sh
 ./run.sh
+```
+
+### ❖ Windows
+```cmd
+cd MusicTick
+run.bat
 ```
 
 ### Χειροκίνητη Μεταγλώττιση & Εκτέλεση
 
 Αν επιθυμείτε να εκτελέσετε τα βήματα χειροκίνητα:
 
+####  macOS / Linux
 ```bash
 # 1. Δημιουργία φακέλου εξόδου
 mkdir -p out
@@ -128,6 +150,23 @@ java --module-path libs/javafx-lib \
      com.musictick.Main
 ```
 
+#### ❖ Windows
+```cmd
+:: 1. Δημιουργία φακέλου εξόδου
+mkdir out
+
+:: 2. Δημιουργία λίστας αρχείων Java και μεταγλώττιση
+dir /s /b src\*.java > sources.txt
+javac --module-path libs\javafx-lib --add-modules javafx.controls,javafx.fxml -d out -cp libs\mysql-connector-java.jar @sources.txt
+del sources.txt
+
+:: 3. Αντιγραφή FXML UI layouts
+copy src\*.fxml out\
+
+:: 4. Εκτέλεση της εφαρμογής
+java --module-path libs\javafx-lib --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics --sun-misc-unsafe-memory-access=allow -cp out;libs\mysql-connector-java.jar com.musictick.Main
+```
+
 ---
 
 ## 5. Διαπιστευτήρια Χρηστών (Test Credentials)
@@ -148,8 +187,9 @@ java --module-path libs/javafx-lib \
 
 Το project περιλαμβάνει μια ριζικά αναβαθμισμένη αυτόματη σουίτα δοκιμών η οποία εκτελεί 10 ολοκληρωμένα σενάρια ελέγχου (Happy & Alternative Paths) σε πραγματικό χρόνο πάνω στη ζωντανή βάση δεδομένων:
 
+###  macOS / Linux
 ```bash
-cd /Users/alex/Desktop/CEID/MusicTick
+cd MusicTick
 
 # Εκτέλεση της σουίτας δοκιμών
 java --module-path libs/javafx-lib \
@@ -158,6 +198,14 @@ java --module-path libs/javafx-lib \
      --sun-misc-unsafe-memory-access=allow \
      -cp out:libs/mysql-connector-java.jar \
      com.musictick.MusicTickTestRunner
+```
+
+### ❖ Windows
+```cmd
+cd MusicTick
+
+:: Εκτέλεση της σουίτας δοκιμών
+java --module-path libs\javafx-lib --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics --sun-misc-unsafe-memory-access=allow -cp out;libs\mysql-connector-java.jar com.musictick.MusicTickTestRunner
 ```
 
 ### Τι περιλαμβάνουν τα Tests:
@@ -191,7 +239,7 @@ java --module-path libs/javafx-lib \
 ## 8. Αντιμετώπιση Προβλημάτων (Troubleshooting)
 
 ### ❌ Σφάλμα `Communications link failure`
-Η MySQL δεν είναι ενεργή. Εκκινήστε τον MySQL Server (π.χ. `brew services start mysql` στο macOS) και βεβαιωθείτε ότι τρέχει στη θύρα 3306.
+Η MySQL δεν είναι ενεργή. Εκκινήστε τον MySQL Server (π.χ. `brew services start mysql` στο macOS, `net start mysql` στα Windows, ή `sudo systemctl start mysql` στο Linux) και βεβαιωθείτε ότι τρέχει στη θύρα 3306.
 
 ### ❌ Σφάλμα `Access denied for user 'root'@'localhost'`
 Ο root χρήστης σας στη MySQL έχει κωδικό πρόσβασης. Ανοίξτε το αρχείο `src/com/musictick/DBConfig.java` και προσθέστε τον κωδικό σας στη μεταβλητή `DB_PASSWORD`.

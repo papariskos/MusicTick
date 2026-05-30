@@ -34,6 +34,7 @@ public class MyTicketsController {
     }
     @FXML
     public void initialize() {
+        Session.setSelectedTicketIdForCancellation(-1);
         loadPurchasedTickets();
     }
 
@@ -73,6 +74,36 @@ public class MyTicketsController {
 
     @FXML
     private void cancelTicket() {
+        String selected = ticketsListView.getSelectionModel().getSelectedItem();
+        if (selected == null || selected.isBlank()) {
+            statusLabel.setText("⚠️ Παρακαλώ επιλέξτε ένα εισιτήριο από τη λίστα πρώτα.");
+            return;
+        }
+
+        int ticketId = -1;
+        try {
+            if (selected.startsWith("Ticket #")) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = "Ticket #".length(); i < selected.length(); i++) {
+                    char c = selected.charAt(i);
+                    if (Character.isDigit(c)) {
+                        sb.append(c);
+                    } else {
+                        break;
+                    }
+                }
+                ticketId = Integer.parseInt(sb.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (ticketId != -1) {
+            Session.setSelectedTicketIdForCancellation(ticketId);
+        } else {
+            Session.setSelectedTicketIdForCancellation(-1);
+        }
+
         openPage("/cancellation_screen.fxml", "MusicTick - Cancellation", 900, 600);
     }
 
